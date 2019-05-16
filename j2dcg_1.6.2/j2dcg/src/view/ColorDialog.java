@@ -27,13 +27,14 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import javafx.scene.paint.Color;
 import model.Pixel;
 
 /**
  * <p>Title: ColorDialog</p>
  * <p>Description: ... (JDialog)</p>
  * <p>Copyright: Copyright (c) 2003 Mohammed Elghaouat, Eric Paquette</p>
- * <p>Company: (ÉTS) - École de Technologie Supérieure</p>
+ * <p>Company: (ï¿½TS) - ï¿½cole de Technologie Supï¿½rieure</p>
  * @author unascribed
  * @version $Revision: 1.7 $
  */
@@ -116,16 +117,140 @@ public class ColorDialog extends JDialog {
 		return panel;
 	}
 	
+	
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {	
 		JPanel panel = new JPanel();
+		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		ColorSlider csCyan = new ColorSlider("C:", PixelCyan(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getRedImage());
+		ColorSlider csMagenta = new ColorSlider("M:", PixelMagenta(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getGreenImage());
+		ColorSlider csYellow = new ColorSlider("Y:", PixelYellow(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getBlueImage());
+		ColorSlider csBlack = new ColorSlider("K:",PixelBlack(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getBlueImage());
+		
+		/// A VOIR AVEC LE NOUVEAU COLOR MEDIATOR CYMK 
+		rgbMediator.setRedCS(csCyan);
+		rgbMediator.setGreenCS(csMagenta);
+		rgbMediator.setBlueCS(csYellow);
+		rgbMediator.setBlueCS(csBlack);
+		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(csCyan);
+		panel.add(csMagenta);
+		panel.add(csYellow);
+		panel.add(csBlack);
+		
+		System.out.println("Cyan:  "+ csCyan);
+		System.out.println("Magenta:  "+ csMagenta);
+		System.out.println("Yellow:  "+ csYellow);
+		System.out.println("Black:  "+ csBlack);
 		
 		return panel;
 	}
 	
 	private JPanel createHSVPanel(ColorDialogResult result, int imageWidths) {	
+		
 		JPanel panel = new JPanel();
 		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		ColorSlider csHue = new ColorSlider("R:", result.getPixel().getRed(), rgbMediator.getRedImage());
+		ColorSlider csSaturation = new ColorSlider("G:", result.getPixel().getGreen(), rgbMediator.getGreenImage());
+		ColorSlider csValue = new ColorSlider("B:", result.getPixel().getBlue(), rgbMediator.getBlueImage());
+		
+		
+		///DOit Ãªtre refait et on doit ajouter une classe 
+		rgbMediator.setRedCS(csHue);
+		rgbMediator.setGreenCS(csSaturation);
+		rgbMediator.setBlueCS(csValue);
+		
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.add(csHue);
+		panel.add(csSaturation);
+		panel.add(csValue);
+		
 		return panel;
+	}
+	
+	private int PixelCyan (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
+		
+		int primeR = resultPixelRed/255;
+		int primeG = resultPixelgreen/255;
+		int primeB = resultPixelBlue/255;
+		float k = 1; 
+		int c = 1; 
+	
+		k = 1 - Math.fma(primeR, primeG, primeB);
+		System.out.println("Black:  "+ k);
+		
+		c = (int)((1 -primeR - k)/(1-k));
+		System.out.println("Cyan:  "+ c);
+
+		return c;
+	}
+	
+	private int PixelMagenta (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
+		
+		int primeR = resultPixelRed/255;
+		int primeG = resultPixelgreen/255;
+		int primeB = resultPixelBlue/255;
+		float k = 0;
+		int m = 0; 
+		
+		k = 1 - Math.fma(primeR, primeG, primeB);
+		System.out.println("Black:  "+ k);
+		
+		m = (int)((1 -primeG - k)/(1-k));
+		System.out.println("Magenta:  "+ m);
+		
+		
+		return m;
+	}
+	
+	private int PixelYellow (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
+		
+		int primeR = resultPixelRed/255;
+		int primeG = resultPixelgreen/255;
+		int primeB = resultPixelBlue/255;
+		float k = 0; 
+		int y = 0;
+		
+		k = 1 - Math.fma(primeR, primeG, primeB);
+		System.out.println("Black:  "+ k);
+		
+		y = (int)((1 -primeB - k)/(1-k));
+		System.out.println("Yellow:  "+ y);
+		
+		
+		
+		return y;
+	}
+	
+	private int PixelBlack (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
+		
+		int primeR = resultPixelRed/255;
+		int primeG = resultPixelgreen/255;
+		int primeB = resultPixelBlue/255;
+		float k = 0; 
+
+		k = 1 - Math.fma(primeR, primeG, primeB);
+		System.out.println("Black:  "+ k);
+		
+		return (int) k;
+	}
+	
+	private int Hue(int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
+		
+		int primeR = resultPixelRed/255;
+		int primeG = resultPixelgreen/255;
+		int primeB = resultPixelBlue/255;
+		float hue = 0;
+		float Cmax =0;
+		float Cmin =0;
+		float Delta =0;
+		
+		Cmax= Math.fma(primeR, primeG, primeB);
+		//Trouver une fonction min qui fonctionne a trois variables. 
+		Cmin= Math.min(primeR, primeG, primeB);
+		return (int) hue;
 	}
 }
 
