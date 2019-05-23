@@ -21,9 +21,10 @@ import model.ObserverIF;
 import model.Pixel;
 
 class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
-	ColorSlider redCS;
-	ColorSlider greenCS;
-	ColorSlider blueCS;
+	ColorSlider cyanCS;
+	ColorSlider yellowCS;
+	ColorSlider magentaCS;
+	ColorSlider blackCS;
 	int red;
 	int green;
 	int blue;
@@ -59,17 +60,22 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		boolean updateRed = false;
 		boolean updateGreen = false;
 		boolean updateBlue = false;
-		if (s == redCS && v != red) {
+		if (s == cyanCS && v != red) {
 			red = v;
 			updateGreen = true;
 			updateBlue = true;
 		}
-		if (s == greenCS && v != green) {
+		if (s == magentaCS && v != green) {
 			green = v;
 			updateRed = true;
 			updateBlue = true;
 		}
-		if (s == blueCS && v != blue) {
+		if (s == yellowCS && v != blue) {
+			blue = v;
+			updateRed = true;
+			updateGreen = true;
+		}
+		if (s == blackCS && v != blue) {
 			blue = v;
 			updateRed = true;
 			updateGreen = true;
@@ -97,8 +103,8 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 				redImage.setRGB(i, j, rgb);
 			}
 		}
-		if (redCS != null) {
-			redCS.update(redImage);
+		if (cyanCS != null) {
+			cyanCS.update(redImage);
 		}
 	}
 	
@@ -111,8 +117,8 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 				greenImage.setRGB(i, j, rgb);
 			}
 		}
-		if (greenCS != null) {
-			greenCS.update(greenImage);
+		if (yellowCS != null) {
+			yellowCS.update(greenImage);
 		}
 	}
 	
@@ -125,11 +131,24 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 				blueImage.setRGB(i, j, rgb);
 			}
 		}
-		if (blueCS != null) {
-			blueCS.update(blueImage);
+		if (magentaCS != null) {
+			magentaCS.update(blueImage);
 		}
 	}
 	
+	public void computeBlackImage(int red, int green, int blue) { 
+		Pixel p = new Pixel(red, green, blue, 255); 
+		for (int i = 0; i<imagesWidth; ++i) {
+			p.setBlue((int)(((double)i / (double)imagesWidth)*255.0)); 
+			int rgb = p.getARGB();
+			for (int j = 0; j<imagesHeight; ++j) {
+				blueImage.setRGB(i, j, rgb);
+			}
+		}
+		if (blackCS != null) {
+			blackCS.update(blueImage);
+		}
+	}
 	/**
 	 * @return
 	 */
@@ -154,26 +173,34 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 	/**
 	 * @param slider
 	 */
-	public void setRedCS(ColorSlider slider) {
-		redCS = slider;
+	public void setCyanCS(ColorSlider slider) {
+		cyanCS = slider;
 		slider.addObserver(this);
 	}
 
 	/**
 	 * @param slider
 	 */
-	public void setGreenCS(ColorSlider slider) {
-		greenCS = slider;
+	public void setMagentaCS(ColorSlider slider) {
+		magentaCS = slider;
 		slider.addObserver(this);
 	}
 
 	/**
 	 * @param slider
 	 */
-	public void setBlueCS(ColorSlider slider) {
-		blueCS = slider;
+	public void setYellowCS(ColorSlider slider) {
+		yellowCS = slider;
 		slider.addObserver(this);
 	}
+	/**
+	 * @param slider
+	 */
+	public void setBlackCS(ColorSlider slider) {
+		blackCS = slider;
+		slider.addObserver(this);
+	}
+	
 	/**
 	 * @return
 	 */
@@ -209,9 +236,10 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		green = result.getPixel().getGreen();
 		blue = result.getPixel().getBlue();
 		
-		redCS.setValue(red);
-		greenCS.setValue(green);
-		blueCS.setValue(blue);
+		cyanCS.setValue(red);
+		magentaCS.setValue(green);
+		yellowCS.setValue(blue);
+		blackCS.setValue(blue);
 		computeRedImage(red, green, blue);
 		computeGreenImage(red, green, blue);
 		computeBlueImage(red, green, blue);

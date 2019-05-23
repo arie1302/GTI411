@@ -29,6 +29,7 @@ import javax.swing.JTabbedPane;
 
 import javafx.scene.paint.Color;
 import model.Pixel;
+import view.CYMKColorMediator;
 
 /**
  * <p>Title: ColorDialog</p>
@@ -41,6 +42,7 @@ import model.Pixel;
 public class ColorDialog extends JDialog {
 	private JButton okButton;
 	private RGBColorMediator rgbMediator;
+	private CYMKColorMediator cymkMediator;
 	private ActionListener okActionListener;
 	private ColorDialogResult result;
 	
@@ -114,6 +116,9 @@ public class ColorDialog extends JDialog {
 		panel.add(csGreen);
 		panel.add(csBlue);
 		
+		System.out.println("Slider:  "+ csRed);
+		System.out.println("Pixel Rouge"+ result.getPixel().getRed());
+		
 		return panel;
 	}
 	
@@ -122,16 +127,16 @@ public class ColorDialog extends JDialog {
 		JPanel panel = new JPanel();
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		ColorSlider csCyan = new ColorSlider("C:", PixelCyan(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getRedImage());
-		ColorSlider csMagenta = new ColorSlider("M:", PixelMagenta(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getGreenImage());
-		ColorSlider csYellow = new ColorSlider("Y:", PixelYellow(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getBlueImage());
-		ColorSlider csBlack = new ColorSlider("K:",PixelBlack(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), rgbMediator.getBlueImage());
+		ColorSlider csCyan = new ColorSlider("C:", PixelCyan(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getRedImage());
+		ColorSlider csMagenta = new ColorSlider("M:", PixelMagenta(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getGreenImage());
+		ColorSlider csYellow = new ColorSlider("Y:", PixelYellow(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getBlueImage());
+		ColorSlider csBlack = new ColorSlider("K:",PixelBlack(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getBlueImage());
 		
 		/// A VOIR AVEC LE NOUVEAU COLOR MEDIATOR CYMK 
-		rgbMediator.setRedCS(csCyan);
-		rgbMediator.setGreenCS(csMagenta);
-		rgbMediator.setBlueCS(csYellow);
-		rgbMediator.setBlueCS(csBlack);
+		cymkMediator.setCyanCS(csCyan);
+		cymkMediator.setYellowCS(csMagenta);
+		cymkMediator.setMagentaCS(csYellow);
+		cymkMediator.setBlackCS(csBlack);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		panel.add(csCyan);
@@ -177,14 +182,18 @@ public class ColorDialog extends JDialog {
 		int primeB = resultPixelBlue/255;
 		float k = 1; 
 		int c = 1; 
-	
+		
+		System.out.println("primeR:  "+ primeR);
+		System.out.println("primeG:  "+ primeG);
+		System.out.println("primeB:  "+ primeB);
+		
 		k = 1 - Math.fma(primeR, primeG, primeB);
 		System.out.println("Black:  "+ k);
 		
-		c = (int)((1 -primeR - k)/(1-k));
+		c = (int)((1 -primeR - k)/(1-k)*100);
 		System.out.println("Cyan:  "+ c);
 
-		return c;
+		return c ;
 	}
 	
 	private int PixelMagenta (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
@@ -198,7 +207,7 @@ public class ColorDialog extends JDialog {
 		k = 1 - Math.fma(primeR, primeG, primeB);
 		System.out.println("Black:  "+ k);
 		
-		m = (int)((1 -primeG - k)/(1-k));
+		m = (int)((1 -primeG - k)/(1-k)*100);
 		System.out.println("Magenta:  "+ m);
 		
 		
@@ -216,10 +225,9 @@ public class ColorDialog extends JDialog {
 		k = 1 - Math.fma(primeR, primeG, primeB);
 		System.out.println("Black:  "+ k);
 		
-		y = (int)((1 -primeB - k)/(1-k));
+		y = (int)((1 -primeB - k)/(1-k)*100);
 		System.out.println("Yellow:  "+ y);
-		
-		
+	
 		
 		return y;
 	}
@@ -249,7 +257,7 @@ public class ColorDialog extends JDialog {
 		
 		Cmax= Math.fma(primeR, primeG, primeB);
 		//Trouver une fonction min qui fonctionne a trois variables. 
-		Cmin= Math.min(primeR, primeG, primeB);
+		Cmin= Math.min(primeR, Math.min(primeG, primeB));
 		return (int) hue;
 	}
 }
