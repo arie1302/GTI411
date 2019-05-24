@@ -70,8 +70,9 @@ public class ColorDialog extends JDialog {
 		JPanel cmykPanel = createCMYKPanel(result, imageWidths);
 		tabbedPane.addTab("CMYK", cmykPanel);
 		
+		/**
 		JPanel hsvPanel = createHSVPanel(result, imageWidths);
-		tabbedPane.addTab("HSV", hsvPanel);
+		tabbedPane.addTab("HSV", hsvPanel);**/
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
@@ -116,21 +117,19 @@ public class ColorDialog extends JDialog {
 		panel.add(csGreen);
 		panel.add(csBlue);
 		
-		System.out.println("Slider:  "+ csRed);
-		System.out.println("Pixel Rouge"+ result.getPixel().getRed());
-		
 		return panel;
 	}
 	
-	
+
 	private JPanel createCMYKPanel(ColorDialogResult result, int imageWidths) {	
 		JPanel panel = new JPanel();
+		cymkMediator = new CYMKColorMediator(result, imageWidths, 30);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		ColorSlider csCyan = new ColorSlider("C:", PixelCyan(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getRedImage());
-		ColorSlider csMagenta = new ColorSlider("M:", PixelMagenta(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getGreenImage());
-		ColorSlider csYellow = new ColorSlider("Y:", PixelYellow(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getBlueImage());
-		ColorSlider csBlack = new ColorSlider("K:",PixelBlack(result.getPixel().getRed(), result.getPixel().getGreen(), result.getPixel().getBlue()), cymkMediator.getBlueImage());
+		ColorSlider csCyan = new ColorSlider("C:", result.getPixel().getRed(), cymkMediator.getCyanImage());
+		ColorSlider csMagenta = new ColorSlider("Y:", result.getPixel().getRed(), cymkMediator.getYellowImage());
+		ColorSlider csYellow = new ColorSlider("M:", result.getPixel().getRed(), cymkMediator.getMagentaImage());
+		ColorSlider csBlack = new ColorSlider("K:", result.getPixel().getAlpha(), cymkMediator.getBlackImage());
 		
 		/// A VOIR AVEC LE NOUVEAU COLOR MEDIATOR CYMK 
 		cymkMediator.setCyanCS(csCyan);
@@ -151,7 +150,8 @@ public class ColorDialog extends JDialog {
 		
 		return panel;
 	}
-	
+
+	/**
 	private JPanel createHSVPanel(ColorDialogResult result, int imageWidths) {	
 		
 		JPanel panel = new JPanel();
@@ -173,8 +173,9 @@ public class ColorDialog extends JDialog {
 		panel.add(csValue);
 		
 		return panel;
-	}
+	}**/
 	
+	/**
 	private int PixelCyan (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
 		
 		int primeR = resultPixelRed/255;
@@ -187,7 +188,7 @@ public class ColorDialog extends JDialog {
 		System.out.println("primeG:  "+ primeG);
 		System.out.println("primeB:  "+ primeB);
 		
-		k = 1 - Math.fma(primeR, primeG, primeB);
+		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
 		System.out.println("Black:  "+ k);
 		
 		c = (int)((1 -primeR - k)/(1-k)*100);
@@ -204,7 +205,7 @@ public class ColorDialog extends JDialog {
 		float k = 0;
 		int m = 0; 
 		
-		k = 1 - Math.fma(primeR, primeG, primeB);
+		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
 		System.out.println("Black:  "+ k);
 		
 		m = (int)((1 -primeG - k)/(1-k)*100);
@@ -222,7 +223,7 @@ public class ColorDialog extends JDialog {
 		float k = 0; 
 		int y = 0;
 		
-		k = 1 - Math.fma(primeR, primeG, primeB);
+		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
 		System.out.println("Black:  "+ k);
 		
 		y = (int)((1 -primeB - k)/(1-k)*100);
@@ -239,7 +240,7 @@ public class ColorDialog extends JDialog {
 		int primeB = resultPixelBlue/255;
 		float k = 0; 
 
-		k = 1 - Math.fma(primeR, primeG, primeB);
+		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
 		System.out.println("Black:  "+ k);
 		
 		return (int) k;
@@ -255,10 +256,11 @@ public class ColorDialog extends JDialog {
 		float Cmin =0;
 		float Delta =0;
 		
-		Cmax= Math.fma(primeR, primeG, primeB);
+		Cmax= Math.max(primeR, Math.max(primeG, primeB));
 		//Trouver une fonction min qui fonctionne a trois variables. 
 		Cmin= Math.min(primeR, Math.min(primeG, primeB));
 		return (int) hue;
 	}
+	**/
 }
 
