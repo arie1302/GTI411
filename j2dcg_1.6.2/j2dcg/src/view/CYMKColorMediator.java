@@ -183,9 +183,6 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		return blackImage;
 	}
 
-	/**
-	 * @return
-	 */
 	public BufferedImage getCyanImage() {
 		return cyanImage;
 	}
@@ -235,9 +232,6 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		return green;
 	}
 
-	/**
-	 * @return
-	 */
 	public int getCyan() {
 		return cyan;
 	}
@@ -266,6 +260,12 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		red = result.getPixel().getRed();
 		green = result.getPixel().getGreen();
 		blue = result.getPixel().getBlue();
+		
+		cyan = this.getCyan();
+		yellow = this.getYellow();
+		magenta = this.getMagenta();
+		black = this.getBlack();
+		
 		
 		cyanCS.setValue(cyan);
 		magentaCS.setValue(magenta);

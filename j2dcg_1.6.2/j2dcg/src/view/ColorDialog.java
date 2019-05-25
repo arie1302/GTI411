@@ -43,6 +43,7 @@ public class ColorDialog extends JDialog {
 	private JButton okButton;
 	private RGBColorMediator rgbMediator;
 	private CYMKColorMediator cymkMediator;
+	private HSVColorMediator hsvMediator;
 	private ActionListener okActionListener;
 	private ColorDialogResult result;
 	
@@ -70,9 +71,9 @@ public class ColorDialog extends JDialog {
 		JPanel cmykPanel = createCMYKPanel(result, imageWidths);
 		tabbedPane.addTab("CMYK", cmykPanel);
 		
-		/**
+		
 		JPanel hsvPanel = createHSVPanel(result, imageWidths);
-		tabbedPane.addTab("HSV", hsvPanel);**/
+		tabbedPane.addTab("HSV", hsvPanel);
 		
 		JPanel buttonsPanel = new JPanel();
 		buttonsPanel.setLayout(new BoxLayout(buttonsPanel, BoxLayout.X_AXIS));
@@ -131,7 +132,6 @@ public class ColorDialog extends JDialog {
 		ColorSlider csYellow = new ColorSlider("M:", cymkMediator.getMagenta(), cymkMediator.getMagentaImage());
 		ColorSlider csBlack = new ColorSlider("K:", cymkMediator.getBlack(), cymkMediator.getBlackImage());
 		
-		/// A VOIR AVEC LE NOUVEAU COLOR MEDIATOR CYMK 
 		cymkMediator.setCyanCS(csCyan);
 		cymkMediator.setYellowCS(csMagenta);
 		cymkMediator.setMagentaCS(csYellow);
@@ -146,15 +146,19 @@ public class ColorDialog extends JDialog {
 		return panel;
 	}
 
-	/**
+	
 	private JPanel createHSVPanel(ColorDialogResult result, int imageWidths) {	
 		
 		JPanel panel = new JPanel();
+		hsvMediator = new HSVColorMediator(result, imageWidths, 30);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		ColorSlider csHue = new ColorSlider("R:", result.getPixel().getRed(), rgbMediator.getRedImage());
-		ColorSlider csSaturation = new ColorSlider("G:", result.getPixel().getGreen(), rgbMediator.getGreenImage());
-		ColorSlider csValue = new ColorSlider("B:", result.getPixel().getBlue(), rgbMediator.getBlueImage());
+		
+		//Doit être modifé
+		ColorSlider csHue = new ColorSlider("H:", result.getPixel().getRed(), rgbMediator.getRedImage());
+		ColorSlider csSaturation = new ColorSlider("S:", result.getPixel().getGreen(), rgbMediator.getGreenImage());
+		ColorSlider csValue = new ColorSlider("V:", result.getPixel().getAlpha(), rgbMediator.getBlueImage());
+		
 		
 		
 		///DOit Ãªtre refait et on doit ajouter une classe 
@@ -168,7 +172,7 @@ public class ColorDialog extends JDialog {
 		panel.add(csValue);
 		
 		return panel;
-	}**/
+	}
 	
 	/**
 	private int PixelCyan (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
