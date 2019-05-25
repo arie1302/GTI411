@@ -126,10 +126,10 @@ public class ColorDialog extends JDialog {
 		cymkMediator = new CYMKColorMediator(result, imageWidths, 30);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		ColorSlider csCyan = new ColorSlider("C:", result.getPixel().getRed(), cymkMediator.getCyanImage());
-		ColorSlider csMagenta = new ColorSlider("Y:", result.getPixel().getRed(), cymkMediator.getYellowImage());
-		ColorSlider csYellow = new ColorSlider("M:", result.getPixel().getRed(), cymkMediator.getMagentaImage());
-		ColorSlider csBlack = new ColorSlider("K:", result.getPixel().getAlpha(), cymkMediator.getBlackImage());
+		ColorSlider csCyan = new ColorSlider("C:", cymkMediator.getCyan(), cymkMediator.getCyanImage());
+		ColorSlider csMagenta = new ColorSlider("Y:", cymkMediator.getYellow(), cymkMediator.getYellowImage());
+		ColorSlider csYellow = new ColorSlider("M:", cymkMediator.getMagenta(), cymkMediator.getMagentaImage());
+		ColorSlider csBlack = new ColorSlider("K:", cymkMediator.getBlack(), cymkMediator.getBlackImage());
 		
 		/// A VOIR AVEC LE NOUVEAU COLOR MEDIATOR CYMK 
 		cymkMediator.setCyanCS(csCyan);
@@ -142,11 +142,6 @@ public class ColorDialog extends JDialog {
 		panel.add(csMagenta);
 		panel.add(csYellow);
 		panel.add(csBlack);
-		
-		System.out.println("Cyan:  "+ csCyan);
-		System.out.println("Magenta:  "+ csMagenta);
-		System.out.println("Yellow:  "+ csYellow);
-		System.out.println("Black:  "+ csBlack);
 		
 		return panel;
 	}
