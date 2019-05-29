@@ -130,6 +130,20 @@ class RGBColorMediator extends Object implements SliderObserver, ObserverIF {
 		}
 	}
 	
+	public void computeBlackImage(int red, int green, int blue) { 
+		Pixel p = new Pixel(red, green, blue, 255); 
+		for (int i = 0; i<imagesWidth; ++i) {
+			p.setBlue((int)(((double)i / (double)imagesWidth)*255.0)); 
+			int rgb = p.getARGB();
+			for (int j = 0; j<imagesHeight; ++j) {
+				blueImage.setRGB(i, j, rgb);
+			}
+		}
+		if (blueCS != null) {
+			blueCS.update(blueImage);
+		}
+	}
+	
 	/**
 	 * @return
 	 */
@@ -215,6 +229,7 @@ class RGBColorMediator extends Object implements SliderObserver, ObserverIF {
 		computeRedImage(red, green, blue);
 		computeGreenImage(red, green, blue);
 		computeBlueImage(red, green, blue);
+		computeBlackImage(red, green, blue);
 		
 		// Efficiency issue: When the color is adjusted on a tab in the 
 		// user interface, the sliders color of the other tabs are recomputed,

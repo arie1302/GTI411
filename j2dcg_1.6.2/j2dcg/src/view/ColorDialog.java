@@ -146,7 +146,6 @@ public class ColorDialog extends JDialog {
 		return panel;
 	}
 
-	
 	private JPanel createHSVPanel(ColorDialogResult result, int imageWidths) {	
 		
 		JPanel panel = new JPanel();
@@ -155,96 +154,27 @@ public class ColorDialog extends JDialog {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
 		//Doit être modifé
-		ColorSlider csHue = new ColorSlider("H:", result.getPixel().getRed(), rgbMediator.getRedImage());
-		ColorSlider csSaturation = new ColorSlider("S:", result.getPixel().getGreen(), rgbMediator.getGreenImage());
-		ColorSlider csValue = new ColorSlider("V:", result.getPixel().getAlpha(), rgbMediator.getBlueImage());
+		//ColorSlider csHue = new ColorSlider("H:", result.getPixel().getRed(), hsvMediator.getRedImage());
+		//ColorSlider csSaturation = new ColorSlider("S:", result.getPixel().getGreen(), hsvMediator.getGreenImage());
+		//ColorSlider csValue = new ColorSlider("V:", result.getPixel().getAlpha(), hsvMediator.getBlueImage());
 		
 		
 		
 		///DOit Ãªtre refait et on doit ajouter une classe 
-		rgbMediator.setRedCS(csHue);
-		rgbMediator.setGreenCS(csSaturation);
-		rgbMediator.setBlueCS(csValue);
+		//hsvMediator.setRedCS(csHue);
+		//hsvMediator.setGreenCS(csSaturation);
+		//hsvMediator.setBlueCS(csValue);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		panel.add(csHue);
-		panel.add(csSaturation);
-		panel.add(csValue);
+		//panel.add(csHue);
+		//panel.add(csSaturation);
+		//panel.add(csValue);
 		
 		return panel;
 	}
 	
 	/**
-	private int PixelCyan (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
-		
-		int primeR = resultPixelRed/255;
-		int primeG = resultPixelgreen/255;
-		int primeB = resultPixelBlue/255;
-		float k = 1; 
-		int c = 1; 
-		
-		System.out.println("primeR:  "+ primeR);
-		System.out.println("primeG:  "+ primeG);
-		System.out.println("primeB:  "+ primeB);
-		
-		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
-		System.out.println("Black:  "+ k);
-		
-		c = (int)((1 -primeR - k)/(1-k)*100);
-		System.out.println("Cyan:  "+ c);
 
-		return c ;
-	}
-	
-	private int PixelMagenta (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
-		
-		int primeR = resultPixelRed/255;
-		int primeG = resultPixelgreen/255;
-		int primeB = resultPixelBlue/255;
-		float k = 0;
-		int m = 0; 
-		
-		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
-		System.out.println("Black:  "+ k);
-		
-		m = (int)((1 -primeG - k)/(1-k)*100);
-		System.out.println("Magenta:  "+ m);
-		
-		
-		return m;
-	}
-	
-	private int PixelYellow (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
-		
-		int primeR = resultPixelRed/255;
-		int primeG = resultPixelgreen/255;
-		int primeB = resultPixelBlue/255;
-		float k = 0; 
-		int y = 0;
-		
-		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
-		System.out.println("Black:  "+ k);
-		
-		y = (int)((1 -primeB - k)/(1-k)*100);
-		System.out.println("Yellow:  "+ y);
-	
-		
-		return y;
-	}
-	
-	private int PixelBlack (int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
-		
-		int primeR = resultPixelRed/255;
-		int primeG = resultPixelgreen/255;
-		int primeB = resultPixelBlue/255;
-		float k = 0; 
-
-		k = 1 - Math.max(primeR, Math.max(primeG, primeB));
-		System.out.println("Black:  "+ k);
-		
-		return (int) k;
-	}
-	
 	private int Hue(int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
 		
 		int primeR = resultPixelRed/255;
