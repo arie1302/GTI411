@@ -211,14 +211,16 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		int gCalculated = (int)newHSV[1];
 		int bCalculated = (int)newHSV[2];
 		
-		Pixel p = new Pixel(rCalculated, gCalculated, bCalculated, 255); 
+		 
 		
 		for (int i = 0; i<imagesWidth; ++i) {
 			//ajouter transofmration 255
 			newHSV = hsvToRgb(hue, saturation, value);
-			p.setRed(rCalculated); 
-			p.setGreen(gCalculated); 
-			p.setBlue(bCalculated); 
+			//p.setRed(rCalculated); 
+			//p.setGreen(gCalculated); 
+			//p.setBlue(bCalculated); 
+			Pixel p = new Pixel((int)hue, (int)(((double)i / (double)imagesWidth)*255.0), (int)(((double)i / (double)imagesWidth)*255.0), 255);
+
 			int rgb = p.getARGB();
 			for (int j = 0; j<imagesHeight; ++j) {
 				hueImage.setRGB(i, j, rgb);
@@ -312,6 +314,14 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		valueCS = slider;
 		slider.addObserver(this);
 	}
+	
+	/**
+	 * @return
+	 */
+	public double getRed() {
+		return blue;
+	}
+
 	
 	/**
 	 * @return
