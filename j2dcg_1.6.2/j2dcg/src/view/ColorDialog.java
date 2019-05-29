@@ -153,43 +153,21 @@ public class ColorDialog extends JDialog {
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 		
-		//Doit être modifé
-		//ColorSlider csHue = new ColorSlider("H:", result.getPixel().getRed(), hsvMediator.getRedImage());
-		//ColorSlider csSaturation = new ColorSlider("S:", result.getPixel().getGreen(), hsvMediator.getGreenImage());
-		//ColorSlider csValue = new ColorSlider("V:", result.getPixel().getAlpha(), hsvMediator.getBlueImage());
-		
-		
-		
-		///DOit Ãªtre refait et on doit ajouter une classe 
-		//hsvMediator.setRedCS(csHue);
-		//hsvMediator.setGreenCS(csSaturation);
-		//hsvMediator.setBlueCS(csValue);
+		ColorSlider csHue = new ColorSlider("H:", hsvMediator.getHue(), hsvMediator.getHueImage());
+		ColorSlider csSaturation = new ColorSlider("S:", hsvMediator.getSaturation(), hsvMediator.getSaturationImage());
+		ColorSlider csValue = new ColorSlider("V:", hsvMediator.getValue(), hsvMediator.getValueImage());
+		 
+		hsvMediator.setHueCS(csHue);
+		hsvMediator.setSaturationCS(csSaturation);
+		hsvMediator.setValueCS(csValue);
 		
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-		//panel.add(csHue);
-		//panel.add(csSaturation);
-		//panel.add(csValue);
+		panel.add(csHue);
+		panel.add(csSaturation);
+		panel.add(csValue);
 		
 		return panel;
 	}
-	
-	/**
-
-	private int Hue(int resultPixelRed, int resultPixelgreen, int resultPixelBlue) {
-		
-		int primeR = resultPixelRed/255;
-		int primeG = resultPixelgreen/255;
-		int primeB = resultPixelBlue/255;
-		float hue = 0;
-		float Cmax =0;
-		float Cmin =0;
-		float Delta =0;
-		
-		Cmax= Math.max(primeR, Math.max(primeG, primeB));
-		//Trouver une fonction min qui fonctionne a trois variables. 
-		Cmin= Math.min(primeR, Math.min(primeG, primeB));
-		return (int) hue;
-	}
-	**/
 }
+	
 

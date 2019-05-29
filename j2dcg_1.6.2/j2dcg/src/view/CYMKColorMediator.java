@@ -47,9 +47,9 @@ class CYMKColorMediator extends Object implements SliderObserver, ObserverIF {
 		this.imagesWidth = imagesWidth;
 		this.imagesHeight = imagesHeight;
 		
-		red = result.getPixel().getRed();
-	    green = result.getPixel().getGreen();
-		blue = result.getPixel().getBlue();
+		this.red = result.getPixel().getRed();
+	    this.green = result.getPixel().getGreen();
+		this.blue = result.getPixel().getBlue();
 		
 		//calculer les valeurs du CYMK
 		int[] CYMK = rgbToCymk(red, green, blue);
