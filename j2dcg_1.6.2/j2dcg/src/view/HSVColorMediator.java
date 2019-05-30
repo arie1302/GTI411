@@ -32,13 +32,10 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 	    this.green = result.getPixel().getGreen();
 		this.blue = result.getPixel().getBlue();
 		
-		//calculer les valeurs du HSV
-		//float[] HSV = rgbToHSV(red, green, blue);
-	  //  hue = HSV[0];
-		//saturation = HSV[1];
-		//value = HSV[2];
-
-		
+		float[] newHSV =  rgbToHSV(red, green, blue);
+		this.hue = newHSV[0];
+		this.saturation = newHSV[1];
+		this.value =  newHSV[2];
 		this.result = result;
 		result.addObserver(this);
 		
@@ -46,7 +43,7 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		SaturationImage = new BufferedImage(imagesWidth, imagesHeight, BufferedImage.TYPE_INT_ARGB);
 		valueImage = new BufferedImage(imagesWidth, imagesHeight, BufferedImage.TYPE_INT_ARGB);
 		
-		computeHueImage(red, green, value);
+		computeHueImage(hue, saturation, value);
 		computeSaturationImage(hue, saturation, value);
 		computeValueImage(hue, saturation, value); 	
 	}
@@ -70,7 +67,7 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		Cmax= Math.max(primeR, Math.max(primeG, primeB));
 		Cmin= Math.min(primeR, Math.min(primeG, primeB));
 		Delta = Cmax - Cmin;
-		/**
+		
 		if (Delta == 0) {
 			hue = 0;
 		}else if (Cmax == primeR) {
@@ -85,25 +82,7 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 			saturation = Delta/Cmax;
 		}else if (Cmax == 0) {
 			saturation = 0; 
-		}**/
-		
-		if (primeR == Cmax && primeG == Cmin)
-			hue = 5 + (primeR - primeB) / (primeR - primeG);
-		else if (primeR == Cmax && primeB == Cmin)
-			hue = 1 - (primeR - primeG) / (primeR - primeB);
-		else if (primeG == Cmax && primeB == Cmin)
-			hue = 1 + (primeG - primeR) / (primeG - primeB);
-		else if (primeG == Cmax && primeR == Cmin)
-			hue = 3 - (primeG - primeB) / (primeG - primeR);
-		else if (primeB == Cmax && primeR == Cmin)
-			hue = 3 + (primeB - primeG) / (primeB - primeR);
-		else if (primeB == Cmax && primeG == Cmin)
-			hue = 5 - (primeB - primeR) / (primeB - primeG);
-		
-		hue = hue * 60;
-		
-		if (hue < 0)
-			hue += 360;
+		}
 		
 		saturation = (Cmax - Cmin) / Cmax;
 		hsvResult[0] = hue;
@@ -112,6 +91,7 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		
 		return hsvResult; 
 	}
+	
 	
 	private float[] hsvToRgb(float resultPixelHue, float resultPixelSaturation, float resultPixelValue) {
 		
@@ -165,24 +145,23 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 	 * @see View.SliderObserver#update(double)
 	 */
 	public void update(ColorSlider s, int v) {
-		float [] newHSV;
 		
 		boolean updateHue = false;
 		boolean updateSaturation = false;
 		boolean updateValue = false;
 
 		if (s == hueCS && v != hue) {
-			hue = (float) ((v/255)*360.0);
+			hue = v;
 			updateSaturation = true;
 			updateValue = true;
 		}
 		if (s == saturationCS && v != saturation) {
-			saturation = (float)(v/360);
+			saturation = v;
 			updateHue = true;
 			updateValue = true;
 		}
 		if (s == valueCS && v != value) {
-			value = (float)(v/360);
+			value = v;
 			updateHue = true;
 			updateSaturation = true;
 		}
@@ -196,31 +175,21 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 			computeValueImage(hue, saturation, value);
 		}		
 		
-		newHSV = hsvToRgb(hue, saturation, value); 
-		
+		float[] newHSV = hsvToRgb(hue, saturation, value); 
 		Pixel pixel = new Pixel((int)(newHSV[0]), (int)(newHSV[1]),(int)(newHSV[2]), 255);
 		result.setPixel(pixel);
 	}
 	
 	public void computeHueImage(float hue, float saturation, float value)  { 
-		
-		
-		float[] newHSV = hsvToRgb(hue, saturation, value);
-		
-		int rCalculated = (int)newHSV[0];
-		int gCalculated = (int)newHSV[1];
-		int bCalculated = (int)newHSV[2];
-		
-		 
-		
-		for (int i = 0; i<imagesWidth; ++i) {
-			//ajouter transofmration 255
-			newHSV = hsvToRgb(hue, saturation, value);
-			//p.setRed(rCalculated); 
-			//p.setGreen(gCalculated); 
-			//p.setBlue(bCalculated); 
-			Pixel p = new Pixel((int)hue, (int)(((double)i / (double)imagesWidth)*255.0), (int)(((double)i / (double)imagesWidth)*255.0), 255);
 
+		for (int i = 0; i<imagesWidth; ++i) {
+
+			Pixel p = new Pixel((int)(((double)i / (double)imagesWidth)*240.0), (int)saturation, (int)value,255);
+			
+			System.out.println("i : " + i);
+			System.out.println("saturation : " + saturation);
+			System.out.println("value : " + value);
+			
 			int rgb = p.getARGB();
 			for (int j = 0; j<imagesHeight; ++j) {
 				hueImage.setRGB(i, j, rgb);
@@ -233,17 +202,10 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 	
 	public void computeSaturationImage(float hue, float saturation, float value)  {
 		
-		float[] newHSV = hsvToRgb(hue, saturation, value);
 		
-		int rCalculated = (int)newHSV[0];
-		int gCalculated = (int)newHSV[1];
-		int bCalculated = (int)newHSV[2];
-		
-		Pixel p = new Pixel(rCalculated, gCalculated, bCalculated, 255); 
 		for (int i = 0; i<imagesWidth; ++i) {
-			p.setRed(rCalculated); 
-			p.setGreen(gCalculated); 
-			p.setBlue(bCalculated); 
+			
+			Pixel p = new Pixel((int)hue, (int)(((double)i / (double)imagesWidth)*240.0), (int)value, 255);
 			int rgb = p.getARGB();
 			for (int j = 0; j<imagesHeight; ++j) {
 				SaturationImage.setRGB(i, j, rgb);
@@ -255,17 +217,10 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 	}
 	
 	public void computeValueImage(float hue, float saturation, float value) { 
-		float[] newHSV = hsvToRgb(hue, saturation, value);
-		
-		int rCalculated = (int)newHSV[0];
-		int gCalculated = (int)newHSV[1];
-		int bCalculated = (int)newHSV[2];
-		
-		Pixel p = new Pixel(rCalculated, gCalculated, bCalculated, 255); 
+ 
 		for (int i = 0; i<imagesWidth; ++i) {
-			p.setRed(rCalculated); 
-			p.setGreen(gCalculated); 
-			p.setBlue(bCalculated);
+			Pixel p = new Pixel((int)hue, (int)saturation, (int)(((double)i / (double)imagesWidth)*240.0), 255);
+
 			int rgb = p.getARGB();
 			for (int j = 0; j<imagesHeight; ++j) {
 				valueImage.setRGB(i, j, rgb);
@@ -366,10 +321,12 @@ public class HSVColorMediator extends Object implements SliderObserver, Observer
 		//calculer les valeurs du CYMK
 		float[] HSV = rgbToHSV(red, green, blue);
 		
-		hue = HSV[0];
+		hue = (HSV[0]);
 		saturation = HSV[1];
 		value = HSV[2];
-		
+		System.out.println("hue: "+hue);
+		System.out.println("saturation: "+saturation);
+		System.out.println("value: "+value);
 		
 		hueCS.setValue((int)(hue));
 		saturationCS.setValue((int)(saturation));
