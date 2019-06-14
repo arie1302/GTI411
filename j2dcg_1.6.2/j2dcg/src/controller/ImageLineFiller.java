@@ -39,6 +39,7 @@ public class ImageLineFiller extends AbstractTransformer {
 	private int hueThreshold = 1;
 	private int saturationThreshold = 2;
 	private int valueThreshold = 3;
+	private boolean threshold = false;
 	
 	/**
 	 * Creates an ImageLineFiller with default parameters.
@@ -76,10 +77,20 @@ public class ImageLineFiller extends AbstractTransformer {
 				    0 <= ptTransformed.y && ptTransformed.y < currentImage.getImageHeight()) {
 					currentImage.beginPixelUpdate();
 					if(floodFill == true) {
-						insideFill(ptTransformed);
+						threshold = validationThreshold(fillColor);
+						System.out.println("Validation Thres fill:"+threshold);
+						if(threshold == true) {
+							insideFill(ptTransformed);
+							threshold = false;
+						}
 
 					}else if(floodFill == false){
-						borderFill(ptTransformed);
+						threshold = validationThreshold(borderColor);
+						System.out.println("Validation Thres border:"+threshold);
+						if(threshold == true) {
+							borderFill(ptTransformed);
+							threshold = false;
+						}
 					}
 					
 					currentImage.endPixelUpdate();											 	
@@ -130,14 +141,8 @@ public class ImageLineFiller extends AbstractTransformer {
 		while (!stack.empty()  && borderbool) {
 			Point current = (Point)stack.pop();
 			if (0 <= current.x && current.x < currentImage.getImageWidth()) {
-				System.out.println("Remplissage");
 				if (!currentImage.getPixel(current.x, current.y).equals(borderColor)) {
 
-					// System.out.println("current: " + currentImage.getPixel(current.x,
-					// current.y));
-					// System.out.println("baseline: "+ baseLinePixel);
-					// System.out.println(currentImage.getPixel(current.x,
-					// current.y).equals(baseLinePixel));
 
 					if (currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
 
@@ -297,5 +302,61 @@ public class ImageLineFiller extends AbstractTransformer {
 		valueThreshold = i;
 		System.out.println("new Value Threshold " + i);
 	}
+	
+	//Validation du Threshold avant le remplissage
+	private boolean validationThreshold(Pixel sliderColor) {
+		boolean thresholdCheck = false;
+		double hsv[] = rgb2hsv(sliderColor);
+		System.out.println("SlideColor: h= "+(int)hsv[0]+" s= "+(int)hsv[1]+" v= "+(int)hsv[2]);
+		System.out.println("Thresholf: h= "+hueThreshold+" s= "+saturationThreshold+" v= "+valueThreshold);
+		if((int)hsv[0]<=hueThreshold && (int)hsv[1]<=saturationThreshold && (int)hsv[2]<=valueThreshold ) {
+			thresholdCheck = true;
+		}
+		return thresholdCheck;
+	}
+	
+	//Transformation de la couleur du slider en Hsv
+	private double[] rgb2hsv(Pixel result2) {
+		// TODO Auto-generated method stub
+		// h compris entre 0 et 360, L entre 0 et 1, V entre 0 et 1
+		int red = result2.getRed();
+		int green = result2.getGreen();
+		int blue = result2.getBlue();
+		
+		double r,g,b;
+		double hsvReturn[] = new double[3];
+		double delta, cmax, cmin;
+		r = (double)red/255;
+		g = (double)green/255;
+		b = (double)blue/255;
+		cmax = Math.max(Math.max(r,g), b);
+		cmin = Math.min(Math.min(r,g), b);
+		delta = cmax - cmin;
+
+		// Hue calculation
+		if (delta == 0.0) {hsvReturn[0] = 0.0;}
+		if (cmax==r) {
+			hsvReturn[0] = 60*(((g-b)/delta)%6);
+		}
+		if (cmax==g) {
+			hsvReturn[0] = 60*(((b-r)/delta)+2);
+		}
+		if (cmax==b) {
+			hsvReturn[0] = 60*(((r-g)/delta)+4);
+		}
+		
+		//luminance calculation
+		if (cmax==0.0) {
+			hsvReturn[1] = 0.0;
+		}else {
+			hsvReturn[1] = (delta/cmax)*255;
+		}
+		
+		//value calculation
+		hsvReturn[2] = cmax*255;
+		
+		return hsvReturn;
+	}
+	
 
 }
