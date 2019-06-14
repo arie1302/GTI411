@@ -106,8 +106,12 @@ public class ImageLineFiller extends AbstractTransformer {
 					// Next points to fill.
 					Point nextLeft = new Point(current.x-1, current.y);
 					Point nextRight = new Point(current.x+1, current.y);
+					Point nextDown = new Point(current.x, current.y-1);
+					Point nextUp = new Point(current.x, current.y+1);
 					stack.push(nextLeft);
 					stack.push(nextRight);
+					stack.push(nextDown);
+					stack.push(nextDown);
 				}				
 				
 
