@@ -75,13 +75,54 @@ public class ImageLineFiller extends AbstractTransformer {
 				if (0 <= ptTransformed.x && ptTransformed.x < currentImage.getImageWidth() &&
 				    0 <= ptTransformed.y && ptTransformed.y < currentImage.getImageHeight()) {
 					currentImage.beginPixelUpdate();
-					insideFill(ptTransformed);
+					if(floodFill == true) {
+						insideFill(ptTransformed);
+
+					}else if(floodFill == false){
+						borderFill(ptTransformed);
+					}
+					
 					currentImage.endPixelUpdate();											 	
 					return true;
 				}
 			}
 		}
 		return false;
+	}
+
+	private void borderFill(Point ptClicked) {
+		Stack stack = new Stack();
+		stack.push(ptClicked);
+		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
+
+		while (!stack.empty()) {
+			Point current = (Point)stack.pop();
+			if (0 <= current.x && current.x < currentImage.getImageWidth() &&
+				!currentImage.getPixel(current.x, current.y).equals(borderColor)) {
+
+				System.out.println("current pixel color: " + currentImage.getPixel(current.x, current.y));
+				//System.out.println("baseline: "+ baseLinePixel);
+				//System.out.println(currentImage.getPixel(current.x, current.y).equals(baseLinePixel));
+				
+				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {	
+					//System.out.println("interieur image");
+						// Next points to fill.
+						Point nextLeft = new Point(current.x-1, current.y);
+						Point nextRight = new Point(current.x+1, current.y);	
+						
+						stack.push(nextLeft);
+						stack.push(nextRight);
+						
+				}else if(!currentImage.getPixel(current.x, current.y).equals(borderColor)){
+					
+					currentImage.setPixel(current.x, current.y, borderColor);					
+					
+					System.out.println("border line pixel : "+ currentImage.getPixel(current.x, current.y));
+				}
+
+			}
+		}
+		
 	}
 
 	/**
