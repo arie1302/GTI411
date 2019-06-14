@@ -87,17 +87,32 @@ public class ImageLineFiller extends AbstractTransformer {
 	private void horizontalLineFill(Point ptClicked) {
 		Stack stack = new Stack();
 		stack.push(ptClicked);
+		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
+		//System.out.println(baseLinePixel);
+		//System.out.println("point clicked: " + ptClicked);
 		while (!stack.empty()) {
 			Point current = (Point)stack.pop();
+			//System.out.println("current" + currentImage.getImageWidth() );
 			if (0 <= current.x && current.x < currentImage.getImageWidth() &&
 				!currentImage.getPixel(current.x, current.y).equals(fillColor)) {
-				currentImage.setPixel(current.x, current.y, fillColor);
+				System.out.println("current: " + currentImage.getPixel(current.x, current.y));
+				System.out.println("baseline: "+ baseLinePixel);
+				System.out.println(currentImage.getPixel(current.x, current.y).equals(baseLinePixel));
+				//boolean sameColor = currentImage.getPixel(current.x, current.y) == baseLinePixel;
+				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
+					//System.out.println("fill color" + fillColor);
+					currentImage.setPixel(current.x, current.y, fillColor);
+					
+					// Next points to fill.
+					Point nextLeft = new Point(current.x-1, current.y);
+					Point nextRight = new Point(current.x+1, current.y);
+					stack.push(nextLeft);
+					stack.push(nextRight);
+				}				
 				
-				// Next points to fill.
-				Point nextLeft = new Point(current.x-1, current.y);
-				Point nextRight = new Point(current.x+1, current.y);
-				stack.push(nextLeft);
-				stack.push(nextRight);
+
+				
+
 			}
 		}
 		// TODO EP In this method, we are creating many new Point instances. 
