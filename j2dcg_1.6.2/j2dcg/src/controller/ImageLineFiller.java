@@ -101,6 +101,10 @@ public class ImageLineFiller extends AbstractTransformer {
 		return false;
 	}
 
+	/**
+	 * @param ptClicked
+	 * border fill with specified color
+	 */
 	private void borderFill(Point ptClicked) {
 		boolean borderbool = false;
 		Point BorderStarter ;
@@ -167,7 +171,8 @@ public class ImageLineFiller extends AbstractTransformer {
 	}
 
 	/**
-	 * Horizontal line fill with specified color
+	 * @param ptClicked
+	 * Inside line fill with specified color
 	 */
 	private void insideFill(Point ptClicked) {
 		Stack stack = new Stack();
@@ -303,7 +308,11 @@ public class ImageLineFiller extends AbstractTransformer {
 		System.out.println("new Value Threshold " + i);
 	}
 	
-	//Validation du Threshold avant le remplissage
+	/**
+	 * @param sliderColor 
+	 * 
+	 * Validation du Threshold avant le remplissage
+	 */
 	private boolean validationThreshold(Pixel sliderColor) {
 		boolean thresholdCheck = false;
 		double hsv[] = rgb2hsv(sliderColor);
@@ -315,7 +324,11 @@ public class ImageLineFiller extends AbstractTransformer {
 		return thresholdCheck;
 	}
 	
-	//Transformation de la couleur du slider en Hsv
+	/**
+	 * @param result2 
+	 * 
+	 * Méthode qui permet de faire la transformation de RGB a HSV
+	 */
 	private double[] rgb2hsv(Pixel result2) {
 		// TODO Auto-generated method stub
 		// h compris entre 0 et 360, L entre 0 et 1, V entre 0 et 1
