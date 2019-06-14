@@ -61,6 +61,7 @@ public class ImageLineFiller extends AbstractTransformer {
 				currentImageWidth = currentImage.getImageWidth();
 
 				Point pt = e.getPoint();
+				
 				Point ptTransformed = new Point();
 				try {
 					shape.inverseTransformPoint(pt, ptTransformed);
@@ -68,11 +69,13 @@ public class ImageLineFiller extends AbstractTransformer {
 					e1.printStackTrace();
 					return false;
 				}
-				ptTransformed.translate(-currentImage.getPosition().x, -currentImage.getPosition().y);
+				ptTransformed.translate(currentImage.getPosition().x, currentImage.getPosition().y);
+				System.out.println("width : "+ currentImage.getImageWidth());
+				System.out.println("width : "+ currentImage.getImageHeight());
 				if (0 <= ptTransformed.x && ptTransformed.x < currentImage.getImageWidth() &&
 				    0 <= ptTransformed.y && ptTransformed.y < currentImage.getImageHeight()) {
 					currentImage.beginPixelUpdate();
-					horizontalLineFill(ptTransformed);
+					insideFill(ptTransformed);
 					currentImage.endPixelUpdate();											 	
 					return true;
 				}
@@ -84,23 +87,22 @@ public class ImageLineFiller extends AbstractTransformer {
 	/**
 	 * Horizontal line fill with specified color
 	 */
-	private void horizontalLineFill(Point ptClicked) {
+	private void insideFill(Point ptClicked) {
 		Stack stack = new Stack();
 		stack.push(ptClicked);
 		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
-		//System.out.println(baseLinePixel);
-		//System.out.println("point clicked: " + ptClicked);
+
 		while (!stack.empty()) {
 			Point current = (Point)stack.pop();
-			//System.out.println("current" + currentImage.getImageWidth() );
 			if (0 <= current.x && current.x < currentImage.getImageWidth() &&
 				!currentImage.getPixel(current.x, current.y).equals(fillColor)) {
-				System.out.println("current: " + currentImage.getPixel(current.x, current.y));
-				System.out.println("baseline: "+ baseLinePixel);
-				System.out.println(currentImage.getPixel(current.x, current.y).equals(baseLinePixel));
-				//boolean sameColor = currentImage.getPixel(current.x, current.y) == baseLinePixel;
+				
+				//System.out.println("current: " + currentImage.getPixel(current.x, current.y));
+				//System.out.println("baseline: "+ baseLinePixel);
+				//System.out.println(currentImage.getPixel(current.x, current.y).equals(baseLinePixel));
+				
 				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
-					//System.out.println("fill color" + fillColor);
+					
 					currentImage.setPixel(current.x, current.y, fillColor);
 					
 					// Next points to fill.
@@ -108,14 +110,12 @@ public class ImageLineFiller extends AbstractTransformer {
 					Point nextRight = new Point(current.x+1, current.y);
 					Point nextDown = new Point(current.x, current.y-1);
 					Point nextUp = new Point(current.x, current.y+1);
+					
 					stack.push(nextLeft);
 					stack.push(nextRight);
 					stack.push(nextDown);
-					stack.push(nextDown);
+					stack.push(nextUp);
 				}				
-				
-
-				
 
 			}
 		}
