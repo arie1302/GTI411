@@ -77,7 +77,7 @@ public class ImageLineFiller extends AbstractTransformer {
 				    0 <= ptTransformed.y && ptTransformed.y < currentImage.getImageHeight()) {
 					currentImage.beginPixelUpdate();
 					if (floodFill == true) {
-
+						
 						insideFill(ptTransformed);
 
 					} else if (floodFill == false) {
@@ -293,7 +293,7 @@ public class ImageLineFiller extends AbstractTransformer {
 	}
 	
 	/**
-	 * @param sliderColor 
+	 * @param sliderColor, currentPixel
 	 * 
 	 * Validation du Threshold avant le remplissage
 	 */
