@@ -310,9 +310,8 @@ public class ImageLineFiller extends AbstractTransformer {
 		s = Math.abs((int)hsv[1] - saturationThreshold);
 		v = Math.abs((int)hsv[2] - valueThreshold);
 		
-		System.out.println("Différence en pixel et slider: h= "+h+" s= "+s+" v= "+v);
 		System.out.println("HsvCurrentPixel: h= "+(int)hsvcurrentPixel[0]+" s= "+(int)hsvcurrentPixel[1]+" v= "+(int)hsvcurrentPixel[2]);
-		
+		System.out.println("Différence en pixel et slider: h= "+h+" s= "+s+" v= "+v);
 		if(h<= hsv[0] && h>=hueThreshold &&
 				s<= hsv[1] && h>=saturationThreshold &&
 					v<= hsv[2] && h>=valueThreshold) {
