@@ -108,15 +108,14 @@ public class ImageLineFiller extends AbstractTransformer {
 	private void borderFill(Point ptClicked) {
 		boolean borderbool = false;
 		Point BorderStarter ;
+		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
 		Stack stack = new Stack();
 		stack.push(ptClicked);
-		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
-
+		System.out.println("BaseLinePixel"+baseLinePixel);
 		//Recherche de bordure
 		while (!stack.empty() && !borderbool) {
 			Point current = (Point)stack.pop();
-			if (0 <= current.x && current.x < currentImage.getImageWidth() &&
-				!currentImage.getPixel(current.x, current.y).equals(fillColor)) {
+			if (0 <= current.x && current.x < currentImage.getImageWidth()) {
 				
 				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
 					
@@ -137,7 +136,6 @@ public class ImageLineFiller extends AbstractTransformer {
 				    BorderStarter = new Point(current.x, current.y);
 				    stack.push(BorderStarter);
 				}
-
 			}
 		}
 		
@@ -206,13 +204,6 @@ public class ImageLineFiller extends AbstractTransformer {
 
 			}
 		}
-		// TODO EP In this method, we are creating many new Point instances. 
-		//      We could try to reuse as many as possible to be more efficient.
-		// TODO EP In this method, we could be creating many Point instances. 
-		//      At some point we can run out of memory. We could create a new point
-		//      class that uses shorts to cut the memory use.
-		// TODO EP In this method, we could test if a pixel needs to be filled before
-		//      adding it to the stack (to reduce memory needs and increase efficiency).
 	}
 	
 	/**
@@ -318,7 +309,7 @@ public class ImageLineFiller extends AbstractTransformer {
 		double hsv[] = rgb2hsv(sliderColor);
 		System.out.println("SlideColor: h= "+(int)hsv[0]+" s= "+(int)hsv[1]+" v= "+(int)hsv[2]);
 		System.out.println("Thresholf: h= "+hueThreshold+" s= "+saturationThreshold+" v= "+valueThreshold);
-		if((int)hsv[0]<=hueThreshold && (int)hsv[1]<=saturationThreshold && (int)hsv[2]<=valueThreshold ) {
+		if((int)hsv[0]>=hueThreshold && (int)hsv[1]>=saturationThreshold && (int)hsv[2]>=valueThreshold ) {
 			thresholdCheck = true;
 		}
 		return thresholdCheck;
