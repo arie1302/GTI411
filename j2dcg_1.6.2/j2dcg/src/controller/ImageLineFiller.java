@@ -98,19 +98,27 @@ public class ImageLineFiller extends AbstractTransformer {
 	 * border fill with specified color
 	 */
 	private void borderFill(Point ptClicked) {
-		boolean borderbool = false;
-		boolean thresholdHSV = false;
-		Point BorderStarter ;
+		
+		boolean thresholdBorder = false;
 		Pixel baseLinePixel  = currentImage.getPixel(ptClicked.x, ptClicked.y);
 		Stack stack = new Stack();
 		stack.push(ptClicked);
-		System.out.println("BaseLinePixel"+baseLinePixel);
+		//System.out.println("BaseLinePixel"+baseLinePixel);
+		
 		//Recherche de bordure
-		while (!stack.empty() && !borderbool) {
+		while (!stack.empty()) {
 			Point current = (Point)stack.pop();
-			if (0 <= current.x && current.x < currentImage.getImageWidth()) {
+			if (0 <= current.x && current.x < currentImage.getImageWidth() && 
+					0 <= current.y && current.y < currentImage.getImageHeight() &&
+					!currentImage.getPixel(current.x, current.y).equals(fillColor)) {
 				
-				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
+				//System.out.println("Current Pixel: "+ currentImage.getPixel(current.x, current.y));
+				thresholdBorder = validationThreshold(currentImage.getPixel(current.x, current.y), borderColor);
+				System.out.println("Threshold Validation border"+ thresholdBorder);
+				
+				if(thresholdBorder == false) {
+					
+					currentImage.setPixel(current.x, current.y, fillColor);
 					
 					// Next points to fill.
 					Point nextLeft = new Point(current.x-1, current.y);
@@ -122,42 +130,7 @@ public class ImageLineFiller extends AbstractTransformer {
 					stack.push(nextRight);
 					stack.push(nextDown);
 					stack.push(nextUp);
-				}else {
-					borderbool = true;
-				    baseLinePixel  = currentImage.getPixel(current.x, current.y);
-				    System.out.println("BORDER!!!!!!   "+baseLinePixel);
-				    BorderStarter = new Point(current.x, current.y);
-				    stack.push(BorderStarter);
 				}
-			}
-		}
-		
-		//Remplissage de bordure 
-		while (!stack.empty()  && borderbool) {
-			Point current = (Point)stack.pop();
-			if (0 <= current.x && current.x < currentImage.getImageWidth()) {
-				if (!currentImage.getPixel(current.x, current.y).equals(borderColor)) {
-
-					//thresholdHSV = validationThreshold(borderColor, currentImage.getPixel(current.x, current.y));
-					System.out.println("Threshold Validation Border"+ thresholdHSV);
-					
-					if (currentImage.getPixel(current.x, current.y).equals(baseLinePixel) && thresholdHSV == true) {
-
-						currentImage.setPixel(current.x, current.y, borderColor);
-
-						// Next points to fill.
-						Point nextLeft = new Point(current.x - 1, current.y);
-						Point nextRight = new Point(current.x + 1, current.y);
-						Point nextDown = new Point(current.x, current.y - 1);
-						Point nextUp = new Point(current.x, current.y + 1);
-
-						stack.push(nextLeft);
-						stack.push(nextRight);
-						stack.push(nextDown);
-						stack.push(nextUp);
-					}
-
-				} 
 			}
 		}
 		
@@ -219,8 +192,11 @@ public class ImageLineFiller extends AbstractTransformer {
 	 * @param pixel
 	 */
 	public void setBorderColor(Pixel pixel) {
+		double testHSV[];
 		borderColor = pixel;
-		System.out.println("new border color");
+		System.out.println("new border color" + borderColor);
+		testHSV = rgb2hsv(borderColor);
+		System.out.println("new border color HSV  " + testHSV[0]+"  "+testHSV[1]+"  "+testHSV[2]);
 	}
 
 	/**
@@ -305,9 +281,9 @@ public class ImageLineFiller extends AbstractTransformer {
 		double hsvbaseline[] = rgb2hsv(baseline);
 		
 		
-		System.out.println("Thresholf: h= "+hueThreshold+" s= "+saturationThreshold+" v= "+valueThreshold);
-		System.out.println("baseline: h= "+(int)hsvbaseline[0]+" s= "+(int)hsvbaseline[1]+" v= "+(int)hsvbaseline[2]);
-		System.out.println("HsvCurrentPixel: h= "+(int)hsvcurrentPixel[0]+" s= "+(int)hsvcurrentPixel[1]+" v= "+(int)hsvcurrentPixel[2]);
+		//System.out.println("Thresholf: h= "+hueThreshold+" s= "+saturationThreshold+" v= "+valueThreshold);
+		//System.out.println("baseline: h= "+(int)hsvbaseline[0]+" s= "+(int)hsvbaseline[1]+" v= "+(int)hsvbaseline[2]);
+		//System.out.println("HsvCurrentPixel: h= "+(int)hsvcurrentPixel[0]+" s= "+(int)hsvcurrentPixel[1]+" v= "+(int)hsvcurrentPixel[2]);
 		
 		int h1,s1,v1,h2,s2,v2;
 		
@@ -318,9 +294,9 @@ public class ImageLineFiller extends AbstractTransformer {
 		s2 = (int)(hsvbaseline[1]+ saturationThreshold);
 		v2 = (int)(hsvbaseline[2]+ valueThreshold);
 		
-		System.out.println("h1: "+h1 + " h2: "+h2);
-		System.out.println("s1: "+s1 + " s2: "+s2);
-		System.out.println("v1: "+v1 + " v2: "+v2);
+		//System.out.println("h1: "+h1 + " h2: "+h2);
+		//System.out.println("s1: "+s1 + " s2: "+s2);
+		//System.out.println("v1: "+v1 + " v2: "+v2);
 
 		if(hsvcurrentPixel[0]>= h1 && hsvcurrentPixel[0]<= h2 &&
 				hsvcurrentPixel[1]>= s1 && hsvcurrentPixel[1]<= s2  &&
