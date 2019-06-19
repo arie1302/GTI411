@@ -138,7 +138,7 @@ public class ImageLineFiller extends AbstractTransformer {
 			if (0 <= current.x && current.x < currentImage.getImageWidth()) {
 				if (!currentImage.getPixel(current.x, current.y).equals(borderColor)) {
 
-					thresholdHSV = validationThreshold(borderColor, currentImage.getPixel(current.x, current.y));
+					//thresholdHSV = validationThreshold(borderColor, currentImage.getPixel(current.x, current.y));
 					System.out.println("Threshold Validation Border"+ thresholdHSV);
 					
 					if (currentImage.getPixel(current.x, current.y).equals(baseLinePixel) && thresholdHSV == true) {
@@ -177,9 +177,11 @@ public class ImageLineFiller extends AbstractTransformer {
 			Point current = (Point)stack.pop();
 			if (0 <= current.x && current.x < currentImage.getImageWidth() &&
 				!currentImage.getPixel(current.x, current.y).equals(fillColor)) {
-				thresholdHSV = validationThreshold(borderColor, currentImage.getPixel(current.x, current.y));
+				
+				//Validation de la région
+				thresholdHSV = validationThreshold(currentImage.getPixel(current.x, current.y), baseLinePixel);
 				System.out.println("Threshold Validation flood"+ thresholdHSV);
-				if(currentImage.getPixel(current.x, current.y).equals(baseLinePixel)&& thresholdHSV == true) {
+				if(thresholdHSV == true) {
 					
 					currentImage.setPixel(current.x, current.y, fillColor);
 					
@@ -293,28 +295,36 @@ public class ImageLineFiller extends AbstractTransformer {
 	}
 	
 	/**
-	 * @param sliderColor, currentPixel
+	 * @param currentPixel, baseline
 	 * 
 	 * Validation du Threshold avant le remplissage
 	 */
-	private boolean validationThreshold(Pixel sliderColor,Pixel currentPixel) {
+	private boolean validationThreshold(Pixel currentPixel, Pixel baseline) {
 		boolean thresholdCheck = false;
-		double hsv[] = rgb2hsv(sliderColor);
 		double hsvcurrentPixel[] = rgb2hsv(currentPixel);
+		double hsvbaseline[] = rgb2hsv(baseline);
 		
-		int h,s,v;
-		System.out.println("SlideColor: h= "+(int)hsv[0]+" s= "+(int)hsv[1]+" v= "+(int)hsv[2]);
+		
 		System.out.println("Thresholf: h= "+hueThreshold+" s= "+saturationThreshold+" v= "+valueThreshold);
-		
-		h = Math.abs((int)hsv[0] - hueThreshold);
-		s = Math.abs((int)hsv[1] - saturationThreshold);
-		v = Math.abs((int)hsv[2] - valueThreshold);
-		
+		System.out.println("baseline: h= "+(int)hsvbaseline[0]+" s= "+(int)hsvbaseline[1]+" v= "+(int)hsvbaseline[2]);
 		System.out.println("HsvCurrentPixel: h= "+(int)hsvcurrentPixel[0]+" s= "+(int)hsvcurrentPixel[1]+" v= "+(int)hsvcurrentPixel[2]);
-		System.out.println("Différence en pixel et slider: h= "+h+" s= "+s+" v= "+v);
-		if(h<= hsv[0] && h>=hueThreshold &&
-				s<= hsv[1] && h>=saturationThreshold &&
-					v<= hsv[2] && h>=valueThreshold) {
+		
+		int h1,s1,v1,h2,s2,v2;
+		
+		h1 = (int)(hsvbaseline[0]- hueThreshold);
+		s1 = (int)(hsvbaseline[1]- saturationThreshold);
+		v1 = (int)(hsvbaseline[2]- valueThreshold);
+		h2 = (int)(hsvbaseline[0]+ hueThreshold);
+		s2 = (int)(hsvbaseline[1]+ saturationThreshold);
+		v2 = (int)(hsvbaseline[2]+ valueThreshold);
+		
+		System.out.println("h1: "+h1 + " h2: "+h2);
+		System.out.println("s1: "+s1 + " s2: "+s2);
+		System.out.println("v1: "+v1 + " v2: "+v2);
+
+		if(hsvcurrentPixel[0]>= h1 && hsvcurrentPixel[0]<= h2 &&
+				hsvcurrentPixel[1]>= s1 && hsvcurrentPixel[1]<= s2  &&
+						hsvcurrentPixel[2]>= v1 && hsvcurrentPixel[2]<= v2) {
 			thresholdCheck = true;
 		}
 		return thresholdCheck;
