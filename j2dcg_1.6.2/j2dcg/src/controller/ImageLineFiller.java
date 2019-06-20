@@ -108,12 +108,12 @@ public class ImageLineFiller extends AbstractTransformer {
 	}
 
 	/**
-	 * Méthode qui modifie les couleurs des pixels qui sont à l'int. de la bordure d'une couleur X. 
+	 * Mï¿½thode qui modifie les couleurs des pixels qui sont ï¿½ l'int. de la bordure d'une couleur X. 
 	 * @param ptClicked border fill with specified color
 	 */
 	private void borderFill(Point ptClicked) {
 		
-		//Initialisation des variables qui seront utilisées dans la méthode 
+		//Initialisation des variables qui seront utilisï¿½es dans la mï¿½thode 
 		boolean thresholdBorder = false;
 		Pixel baseLinePixel = currentImage.getPixel(ptClicked.x, ptClicked.y);
 		Stack stack = new Stack();
@@ -125,29 +125,27 @@ public class ImageLineFiller extends AbstractTransformer {
 			Point current = (Point) stack.pop();
 			if (0 <= current.x && current.x < currentImage.getImageWidth() && 0 <= current.y
 					&& current.y < currentImage.getImageHeight()
-					&& !currentImage.getPixel(current.x, current.y).equals(borderColor)) {
+					&& !currentImage.getPixel(current.x, current.y).equals(fillColor)) {
 
-				 System.out.println("Current Pixel: "+ currentImage.getPixel(current.x,
-				 current.y));
-				thresholdBorder = validationThreshold(currentImage.getPixel(current.x, current.y), baseLinePixel);
+				System.out.println("Current Pixel: " + currentImage.getPixel(current.x, current.y));
+				thresholdBorder = validationThreshold(currentImage.getPixel(current.x, current.y), borderColor);
 				System.out.println("Threshold Validation border" + thresholdBorder);
 
-				if (thresholdBorder == true) {
-					
-					
-						currentImage.setPixel(current.x, current.y, fillColor);
+				if (thresholdBorder == false && currentImage.getPixel(current.x, current.y).equals(baseLinePixel)) {
 
-						// Méthode des qutre voisins pour la recherche des autres pixels
-						Point nextLeft = new Point(current.x - 1, current.y);
-						Point nextRight = new Point(current.x + 1, current.y);
-						Point nextDown = new Point(current.x, current.y - 1);
-						Point nextUp = new Point(current.x, current.y + 1);
+					currentImage.setPixel(current.x, current.y, fillColor);
+					
+					// Mï¿½thode des qutre voisins pour la recherche des autres pixels
+					Point nextLeft = new Point(current.x - 1, current.y);
+					Point nextRight = new Point(current.x + 1, current.y);
+					Point nextDown = new Point(current.x, current.y - 1);
+					Point nextUp = new Point(current.x, current.y + 1);
 
-						stack.push(nextLeft);
-						stack.push(nextRight);
-						stack.push(nextDown);
-						stack.push(nextUp);
-		
+					stack.push(nextLeft);
+					stack.push(nextRight);
+					stack.push(nextDown);
+					stack.push(nextUp);
+						
 
 				}
 			}
@@ -156,18 +154,18 @@ public class ImageLineFiller extends AbstractTransformer {
 	}
 
 	/**
-	 * Méthode qui modifie les couleurs des pixels qui sont à l'int. de la région 
+	 * Mï¿½thode qui modifie les couleurs des pixels qui sont ï¿½ l'int. de la rï¿½gion 
 	 * @param ptClicked Inside line fill with specified color
 	 */
 	private void insideFill(Point ptClicked) {
 		
-		//Initialisation des variables qui seront utilisées dans la méthode 
+		//Initialisation des variables qui seront utilisï¿½es dans la mï¿½thode 
 		boolean thresholdHSV = false;
 		Stack stack = new Stack();
 		stack.push(ptClicked);
 		Pixel baseLinePixel = currentImage.getPixel(ptClicked.x, ptClicked.y);
 
-		//Boucle pour vérifier tous les pixels 
+		//Boucle pour vï¿½rifier tous les pixels 
 		while (!stack.empty()) {
 			Point current = (Point) stack.pop();
 			if (0 <= current.x && current.x < currentImage.getImageWidth()
@@ -180,7 +178,7 @@ public class ImageLineFiller extends AbstractTransformer {
 
 					currentImage.setPixel(current.x, current.y, fillColor);
 
-					// Méthode des qutre voisins pour la recherche des autres pixels
+					// Mï¿½thode des qutre voisins pour la recherche des autres pixels
 					Point nextLeft = new Point(current.x - 1, current.y);
 					Point nextRight = new Point(current.x + 1, current.y);
 					Point nextDown = new Point(current.x, current.y - 1);
@@ -303,7 +301,7 @@ public class ImageLineFiller extends AbstractTransformer {
 	 */
 	private boolean validationThreshold(Pixel currentPixel, Pixel baseline) {
 		
-		//Variables qui seront utilisées par la méthode pour valider le seuil
+		//Variables qui seront utilisï¿½es par la mï¿½thode pour valider le seuil
 		boolean thresholdCheck = false;
 		double hsvcurrentPixel[] = rgb2hsv(currentPixel);
 		double hsvbaseline[] = rgb2hsv(baseline);
@@ -317,7 +315,7 @@ public class ImageLineFiller extends AbstractTransformer {
 
 		int h1, s1, v1, h2, s2, v2;
 
-		//Variables de l'intervalle du seuil selon le système de ref. HSV
+		//Variables de l'intervalle du seuil selon le systï¿½me de ref. HSV
 		h1 = (int) (hsvbaseline[0] - hueThreshold);
 		s1 = (int) (hsvbaseline[1] - saturationThreshold);
 		v1 = (int) (hsvbaseline[2] - valueThreshold);
@@ -329,7 +327,7 @@ public class ImageLineFiller extends AbstractTransformer {
 		// System.out.println("s1: "+s1 + " s2: "+s2);
 		// System.out.println("v1: "+v1 + " v2: "+v2);
 
-		//Si le pixel se retrouve à l'interieur du seuil alors il changera pour vrai la constante thresholdCheck
+		//Si le pixel se retrouve ï¿½ l'interieur du seuil alors il changera pour vrai la constante thresholdCheck
 		if (hsvcurrentPixel[0] >= h1 && hsvcurrentPixel[0] <= h2 && hsvcurrentPixel[1] >= s1 && hsvcurrentPixel[1] <= s2
 				&& hsvcurrentPixel[2] >= v1 && hsvcurrentPixel[2] <= v2) {
 			thresholdCheck = true;
@@ -346,12 +344,12 @@ public class ImageLineFiller extends AbstractTransformer {
 	 */
 	private double[] rgb2hsv(Pixel result2) {
 
-		// méthodes pour recuperer les valeurs RGB du pixel
+		// mï¿½thodes pour recuperer les valeurs RGB du pixel
 		int red = result2.getRed();
 		int green = result2.getGreen();
 		int blue = result2.getBlue();
 
-		// Méthodes pour le calcul du HSV
+		// Mï¿½thodes pour le calcul du HSV
 		double r, g, b;
 		double hsvReturn[] = new double[3];
 		double delta, cmax, cmin;
