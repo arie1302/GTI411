@@ -31,7 +31,7 @@ import model.Shape;
  * @version $Revision: 1.6 $
  */
 public class FilteringTransformer extends AbstractTransformer{
-	Filter filter = new MeanFilter3x3(new PaddingZeroStrategy(), new ImageClampStrategy());
+	customFilter3x3 filter = new customFilter3x3(new PaddingZeroStrategy(), new ImageClampStrategy());
 	
 	/**
 	 * @param _coordinates
@@ -41,6 +41,8 @@ public class FilteringTransformer extends AbstractTransformer{
 		System.out.println("[" + (_coordinates.getColumn() - 1) + "]["
                                    + (_coordinates.getRow() - 1) + "] = " 
                                    + _value);
+	
+		filter.updatek((_coordinates.getColumn()-1), (_coordinates.getRow()-1), _value);
 	}
 		
 	/**
@@ -75,16 +77,40 @@ public class FilteringTransformer extends AbstractTransformer{
 	public int getID() { return ID_FILTER; }
 
 	/**
+	 * Step #3: implement mirror border
 	 * @param string
 	 */
 	public void setBorder(String string) {
-		System.out.println(string);
+		System.out.println("border value:  " + string);
+		
+		if (string.equals("0")) {
+			filter.setPaddingStrategy(new PaddingZeroStrategy());
+		} else if (string.equals("Mirror")) {
+			filter.setPaddingStrategy(new PaddingMirrorStrategy());
+		} 
+		//if no filter is selected we need to add the option 
 	}
 
 	/**
+	 * Step #4: 
 	 * @param string
 	 */
 	public void setClamp(String string) {
-		System.out.println(string);
+		System.out.println("clamp value:  " + string);
+		
+		if (string.equals("Clamp 0...255")) {
+			filter.setImageConversionStrategy(new ImageClampStrategy());
+		} else if(string.equals("Abs and normalize to 255")) {
+			filter.setImageConversionStrategy(new AbsAndNormalize255Strategy());
+			
+		} else if(string.equals("Abs and normalize 0 to 255")) {
+			filter.setImageConversionStrategy(new AbsAndNormalize0to255Strategy());
+			
+		} else if(string.equals("Normalize 0 to 255")) {
+			//add missing conditions
+			filter.setImageConversionStrategy(new Normalize0to255Strategy());
+			
+		}
+		//add missing conditions
 	}
 }

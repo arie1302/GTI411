@@ -134,7 +134,6 @@ public class ImageLineFiller extends AbstractTransformer {
 
 				if (thresholdBorder == true) {
 					
-					
 						currentImage.setPixel(current.x, current.y, fillColor);
 
 						// Méthode des qutre voisins pour la recherche des autres pixels
@@ -142,7 +141,7 @@ public class ImageLineFiller extends AbstractTransformer {
 						Point nextRight = new Point(current.x + 1, current.y);
 						Point nextDown = new Point(current.x, current.y - 1);
 						Point nextUp = new Point(current.x, current.y + 1);
-
+						
 						stack.push(nextLeft);
 						stack.push(nextRight);
 						stack.push(nextDown);

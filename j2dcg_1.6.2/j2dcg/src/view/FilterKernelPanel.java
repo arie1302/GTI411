@@ -150,6 +150,11 @@ public class FilterKernelPanel extends JPanel implements ObserverIF {
 		_filterTypeComboBox.setSelectedIndex(0);
 	}
 	 
+	/**
+	 * Step #2 : set filters (moyen-boîte, aussien, sobel, laplacien)
+	 * 
+	 * @param string
+	 */
 	private void setFilter(String string) {
 		int index = 0;
 		for (int i = 0; i < KernelModel.FILTER_TYPE_ARRAY.length; ++i) {
@@ -158,36 +163,36 @@ public class FilterKernelPanel extends JPanel implements ObserverIF {
 			}
 		}
 		switch (index) {
-			case 1: // Mean filter
+			case 1: // Mean filter - completed
 			{
-				float meanKernel[][] = {{1, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
+				float meanKernel[][] = {{1/9, 1/9, 1/9},
+										{1/9, 1/9, 1/9},
+										{1/9, 1/9, 1/9}};
 				_kernelPanel.setKernelValues(meanKernel);
 			} 
 			break;
-			case 2: // Gaussian filter
+			case 2: // Gaussian filter - completed
 			{
-				float meanKernel[][] = {{2, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
-				_kernelPanel.setKernelValues(meanKernel);
+				float gaussianKernel[][] = {{1/16, 2/16, 1/16},
+										{2/16, 4/16, 2/16},
+										{1/16, 2/16, 1/16}};
+				_kernelPanel.setKernelValues(gaussianKernel);
 			} 
 			break;
-			case 3: // 4-Neighbour Laplacian
+			case 3: // 4-Neighbour Laplacian - completed
 			{
-				float meanKernel[][] = {{3, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
-				_kernelPanel.setKernelValues(meanKernel);
+				float lap4Kernel[][] = {{0, -1, 0},
+										{-1, 4, -1},
+										{0, -1, 0}};
+				_kernelPanel.setKernelValues(lap4Kernel);
 			} 
 			break;
-			case 4: // 8-Neighbour Laplacian
+			case 4: // 8-Neighbour Laplacian - completed
 			{
-				float meanKernel[][] = {{4, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
-				_kernelPanel.setKernelValues(meanKernel);
+				float lap8Kernel[][] = {{-1, -1, -1},
+										{-1, 8, -1},
+										{-1, -1, -1}};
+				_kernelPanel.setKernelValues(lap8Kernel);
 			} 
 			break;
 			case 5: // Prewitt Horiz
@@ -206,20 +211,20 @@ public class FilterKernelPanel extends JPanel implements ObserverIF {
 				_kernelPanel.setKernelValues(meanKernel);
 			} 
 			break;
-			case 7: // Sobel Horiz 
+			case 7: // Sobel Horizontal - completed
 			{
-				float meanKernel[][] = {{7, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
-				_kernelPanel.setKernelValues(meanKernel);
+				float SobHorizKernel[][] = {{-1, 0, 1},
+										{-2, 0, 2},
+										{-1, 0, 1}};
+				_kernelPanel.setKernelValues(SobHorizKernel);
 			} 
 			break;
-			case 8: // Sobel Vert
+			case 8: // Sobel Vertical - completed
 			{
-				float meanKernel[][] = {{8, 2, 3},
-										{4, 5, 6},
-										{7, 8, 9}};
-				_kernelPanel.setKernelValues(meanKernel);
+				float sobVertKernel[][] = {{-1, -2, -1},
+										{0, 0, 0},
+										{-1, 0, 1}};
+				_kernelPanel.setKernelValues(sobVertKernel);
 			} 
 			break;
 			case 9: // Roberts 45 degrees
