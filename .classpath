@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="j2dcg_1.6.2/j2dcg/src"/>
+	<classpathentry kind="src" path="lab2/j2dcg_1.6.2/j2dcg/src"/>
+	<classpathentry kind="output" path="j2dcg_1.6.2/j2dcg/bin"/>
+</classpath>
