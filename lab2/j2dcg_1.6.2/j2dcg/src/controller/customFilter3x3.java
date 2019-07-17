@@ -1,21 +1,46 @@
+/*
+   This file is part of j2dcg.
+   j2dcg is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+   j2dcg is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+   GNU General Public License for more details.
+   You should have received a copy of the GNU General Public License
+   along with j2dcg; if not, write to the Free Software
+   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+*/
 package controller;
 
 import model.*;
 
-
+/**
+ * <p>Title: MeanFilter3x3</p>
+ * <p>Description: A mean filter implementation.</p>
+ * <p>Copyright: Copyright (c) 2004 Colin Barré-Brisebois, Éric Paquette</p>
+ * <p>Company: ETS - École de Technologie Supérieure</p>
+ * @author unascribed
+ * @version $Revision: 1.11 $
+ */
 public class customFilter3x3 extends Filter {	
+
 	private double filterMatrix[][] = null;
-	private double inverse= 0;
 	
 	/**
-	 * Constructor by default
-	 * @param paddingStrategy
-	 * @param conversionStrategy
+	 * Default constructor.
+	 * @param paddingStrategy PaddingStrategy used 
+	 * @param conversionStrategy ImageConversionStrategy used
 	 */
 	public customFilter3x3(PaddingStrategy paddingStrategy, 
 						 ImageConversionStrategy conversionStrategy) {
 		super(paddingStrategy, conversionStrategy);	
 		filterMatrix = new double[3][3];
+		
+		filterMatrix[0][0] = filterMatrix[1][0] = filterMatrix[2][0] = 
+		filterMatrix[0][1] = filterMatrix[1][1] = filterMatrix[2][1] =
+		filterMatrix[0][2] = filterMatrix[1][2] = filterMatrix[2][2] = (1.0/9.0);
 	}
 	
 	/**
@@ -49,9 +74,18 @@ public class customFilter3x3 extends Filter {
 	}
 	
 	/**
-	 * Custom filter Implementation
-	 * @param image
-	 * @return
+	 * step #1
+	 * @param x
+	 * @param y
+	 * @param val
+	 */
+	public void updateK(int x, int y, double val) {
+		filterMatrix[x][y] = val;
+	}
+
+	
+	/*
+	 * Filter Implementation 
 	 */
 	private ImageDouble filter(ImageDouble image) {
 		int imageWidth = image.getImageWidth();
@@ -59,7 +93,6 @@ public class customFilter3x3 extends Filter {
 		ImageDouble newImage = new ImageDouble(imageWidth, imageHeight);
 		PixelDouble newPixel = null;
 		double result = 0; 
-		this.fillArray();
 	
 		for (int x = 0; x < imageWidth; x++) {
 			for (int y = 0; y < imageHeight; y++) {
@@ -69,8 +102,7 @@ public class customFilter3x3 extends Filter {
 				// RED
 				for (int i = 0; i <= 2; i++) {
 					for (int j = 0; j <= 2; j++) {
-						result += filterMatrix[i][j] * inverse * getPaddingStrategy().pixelAt(image, x+
-										(i-1), y+(j-1)).getRed();
+						result += filterMatrix[i][j] * getPaddingStrategy().pixelAt(image, x+(i-1), y+(j-1)).getRed();
 					}
 				}
 				
@@ -81,8 +113,9 @@ public class customFilter3x3 extends Filter {
 				// Green
 				for (int i = 0; i <= 2; i++) {
 					for (int j = 0; j <= 2; j++) {
-						result += filterMatrix[i][j] * inverse *getPaddingStrategy().pixelAt(image,
-										x+(i-1), y+(j-1)).getGreen();
+						result += filterMatrix[i][j] *  getPaddingStrategy().pixelAt(image, 
+																					x+(i-1), 
+																					y+(j-1)).getGreen();
 					}
 				}
 				
@@ -93,8 +126,9 @@ public class customFilter3x3 extends Filter {
 				// Blue
 				for (int i = 0; i <= 2; i++) {
 					for (int j = 0; j <= 2; j++) {
-						result += filterMatrix[i][j] * inverse * getPaddingStrategy().pixelAt(image, x+(i-1), 
-										y+(j-1)).getBlue();
+						result += filterMatrix[i][j] * getPaddingStrategy().pixelAt(image,
+																					x+(i-1), 
+																					y+(j-1)).getBlue();
 					}
 				}
 				
@@ -102,7 +136,7 @@ public class customFilter3x3 extends Filter {
 				result = 0;
 							
 				//*******************************
-				// Alpha
+				// Alpha - Untouched in this filter
 				newPixel.setAlpha(getPaddingStrategy().pixelAt(image, x,y).getAlpha());
 							 
 				//*******************************
@@ -113,37 +147,4 @@ public class customFilter3x3 extends Filter {
 		
 		return newImage;
 	}
-
-	/**
-	 * 
-	 */
-	private void fillArray() {
-		double value = 0;
-		for (int i = 0; i <=2; i++) {
-			for (int j = 0; j <= 2; j++) {
-				value = value + this.filterMatrix[i][j];
-			}
-		}
-		
-		//When the value is null then change the value to 1 
-		if(value == 0) {
-			value = 1;
-		}else {
-			inverse = Math.pow(value, -1);
-		}
-		
-		
-	}
-
-	/**
-	 * 
-	 * @param i
-	 * @param j
-	 * @param _value
-	 */
-	public void updatek(int i, int j, float _value) {
-		this.filterMatrix[i][j] = _value;
-
-	}
-	
 }

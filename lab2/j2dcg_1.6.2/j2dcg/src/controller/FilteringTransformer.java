@@ -42,7 +42,7 @@ public class FilteringTransformer extends AbstractTransformer{
                                    + (_coordinates.getRow() - 1) + "] = " 
                                    + _value);
 	
-		filter.updatek((_coordinates.getColumn()-1), (_coordinates.getRow()-1), _value);
+		filter.updateK((_coordinates.getColumn()-1), (_coordinates.getRow()-1), _value);
 	}
 		
 	/**
@@ -107,10 +107,8 @@ public class FilteringTransformer extends AbstractTransformer{
 			filter.setImageConversionStrategy(new AbsAndNormalize0to255Strategy());
 			
 		} else if(string.equals("Normalize 0 to 255")) {
-			//add missing conditions
 			filter.setImageConversionStrategy(new Normalize0to255Strategy());
-			
 		}
-		//add missing conditions
+		
 	}
 }
