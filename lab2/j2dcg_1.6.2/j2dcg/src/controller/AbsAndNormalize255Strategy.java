@@ -27,10 +27,7 @@ public class AbsAndNormalize255Strategy extends ImageConversionStrategy {
 		}
 		newImage.endPixelUpdate();
 		return newImage;
-		
-		
-		
-		// TODO Auto-generated method stub
+
 	}
 	
 	
