@@ -4,7 +4,9 @@ import model.*;
 
 public class PaddingMirrorStrategy extends PaddingStrategy{
 	
-	//linear filter 
+	/**
+	 * Mirror padding 
+	 */
 	public Pixel pixelAt(ImageX image, int x, int y) {
 		
 		int width = image.getImageWidth();
