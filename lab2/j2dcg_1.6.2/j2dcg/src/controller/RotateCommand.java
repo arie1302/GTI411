@@ -14,13 +14,20 @@
 */
 package controller;
 
+import java.awt.Point;
+import java.awt.geom.AffineTransform;
+import java.util.Iterator;
 import java.util.List;
+
+import model.Document;
+import model.Shape;
+import view.Application;
 
 /**
  * <p>Title: RotateCommand</p>
  * <p>Description: </p>
- * <p>Copyright: Copyright (c) 2004 Jean-François Barras, Éric Paquette</p>
- * <p>Company: (ÉTS) - École de Technologie Supérieure</p>
+ * <p>Copyright: Copyright (c) 2004 Jean-Franï¿½ois Barras, ï¿½ric Paquette</p>
+ * <p>Company: (ï¿½TS) - ï¿½cole de Technologie Supï¿½rieure</p>
  * <p>Created on: 2004-03-19</p>
  * @version $Revision: 1.2 $
  */
@@ -35,7 +42,7 @@ public class RotateCommand extends AnchoredTransformationCommand {
 						 List aObjects) {
 		super(anchor);
 		this.thetaDegrees = thetaDegrees;
-		objects = aObjects;
+		objects = aObjects; 
 	}
 	
 	/* (non-Javadoc)
@@ -44,8 +51,80 @@ public class RotateCommand extends AnchoredTransformationCommand {
 	public void execute() {
 		System.out.println("command: rotate " + thetaDegrees +
                            " degrees around " + getAnchor() + ".");
-
-		// voluntarily undefined
+		Iterator iter = objects.iterator();
+		Shape shape;
+		Point anchorSelected = null;
+		
+		//get the selected object
+		Document doc = Application.getInstance().getActiveDocument();
+		List selectedObjects = doc.getSelectedObjects();
+		
+		//Get anchor point of the selected object
+		switch (getAnchor()) {
+			case 0: //TopLeft
+			{
+				System.out.println("Top Left, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);	
+			}
+			break;
+			case 1:  //Top Center
+			{
+				System.out.println("Top Center, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 2:  //Top Right
+			{
+				System.out.println("Top Right, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 3:  //Middle Left
+			{
+				System.out.println("Middle Left, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 4:  //Center
+			{
+				System.out.println("Center, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 5:  //Middle Right
+			{
+				System.out.println("Middle Right, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 6:  //Bottom Left
+			{
+				System.out.println("Bottom Left, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+			break;
+			case 7:  //Bottom center
+			{
+				System.out.println("Bottom center, Get Anchor Point ... " );
+				anchorSelected = getAnchorPoint(selectedObjects);
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+			}
+		}
+		//appliquer la rotation sur l'object
+		while(iter.hasNext()){
+			shape = (Shape)iter.next();
+			mt.addMememto(shape);
+			AffineTransform t = shape.getAffineTransform();
+			t.rotate(thetaDegrees,anchorSelected.x,anchorSelected.y);	
+			shape.setAffineTransform(t);
+		}
 	}
 
 	/* (non-Javadoc)
