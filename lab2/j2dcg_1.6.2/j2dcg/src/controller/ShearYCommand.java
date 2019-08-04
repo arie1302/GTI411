@@ -53,32 +53,45 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 		Iterator iter = objects.iterator();
 		Shape shape;
 		Point anchorSelected = null;
-		
+		double sx = 0,sy = 0;
+		int anchorX =0, anchorY = 0;
 		//get the selected object
 		Document doc = Application.getInstance().getActiveDocument();
 		List selectedObjects = doc.getSelectedObjects();
 		
 		//Get anchor point of the selected object
 		switch (getAnchor()) {
-			case 0: //TopLeft
+			case 0: //TopLeft -- GOOD
 			{
 				System.out.println("Top Left, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
-				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);	
+				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
-			case 1:  //Top Center
+			case 1:  //Top Center -- GOOD
 			{
 				System.out.println("Top Center, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
-			case 2:  //Top Right
+			case 2:  //Top Right -- GOOD
 			{
 				System.out.println("Top Right, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
 			case 3:  //Middle Left
@@ -86,13 +99,21 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 				System.out.println("Middle Left, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
-			case 4:  //Center
+			case 4:  //Center  -- GOOD
 			{
 				System.out.println("Center, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY=  -anchorSelected.y;
 			}
 			break;
 			case 5:  //Middle Right
@@ -100,6 +121,10 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 				System.out.println("Middle Right, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
 			case 6:  //Bottom Left
@@ -107,6 +132,10 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 				System.out.println("Bottom Left, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = 1;
+				anchorX = 0;
+				anchorY= 0;
 			}
 			break;
 			case 7:  //Bottom center
@@ -114,17 +143,22 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 				System.out.println("Bottom center, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
+				sx = 1;
+				sy = -1;
+				anchorX = 0;
+				anchorY= anchorSelected.x;
 			}
 		}
-		//appliquer la shearx sur l'object
+		//appliquer la ShearY sur l'object
 		while(iter.hasNext()){
 			shape = (Shape)iter.next();
 			mt.addMememto(shape);
 			float shy = (float)Math.atan(angleDegrees);
-			System.out.println("angle degree: "+angleDegrees+"SHY: "+shy);
+			System.out.println("angle degree: "+angleDegrees+"SHX: "+shy);
 			AffineTransform t = shape.getAffineTransform();
 			t.shear(0,shy);
-			t.translate(anchorSelected.x,(1-shy)*anchorSelected.y);
+			t.scale(sx, sy);
+			t.translate(anchorX,anchorY);
 			shape.setAffineTransform(t);
 		}
 	}

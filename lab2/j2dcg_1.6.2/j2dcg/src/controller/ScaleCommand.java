@@ -123,7 +123,6 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 			shape = (Shape)iter.next();
 			mt.addMememto(shape);
 			AffineTransform t = shape.getAffineTransform();
-			t.translate(-anchorX,-anchorY);
 			t.scale(sx, sy);
 			t.translate((1-sx)*anchorSelected.x,(1-sy)*anchorSelected.y);
 			shape.setAffineTransform(t);
