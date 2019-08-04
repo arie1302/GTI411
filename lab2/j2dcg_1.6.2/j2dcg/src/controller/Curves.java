@@ -14,18 +14,20 @@
 */
 package controller;
 
+import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
 import view.Application;
 import view.CurvesPanel;
-
+import model.BSplineCurveType;
 import model.BezierCurveType;
 import model.ControlPoint;
 import model.Curve;
 import model.CurvesModel;
 import model.DocObserver;
 import model.Document;
+import model.HermiteCurveType;
 import model.PolylineCurveType;
 import model.Shape;
 
@@ -38,7 +40,8 @@ import model.Shape;
  * @version $Revision: 1.9 $
  */
 public class Curves extends AbstractTransformer implements DocObserver {
-		
+
+	
 	/**
 	 * Default constructor
 	 */
@@ -104,13 +107,25 @@ public class Curves extends AbstractTransformer implements DocObserver {
 		if (string == CurvesModel.BEZIER) {
 			curve.setCurveType(new BezierCurveType(CurvesModel.BEZIER));
 		} else if (string == CurvesModel.LINEAR) {
-			curve.setCurveType(new PolylineCurveType(CurvesModel.LINEAR));
-		} else {
+			curve.setCurveType(new BSplineCurveType(CurvesModel.LINEAR));
+		} else if (string == CurvesModel.BSPLINE) {
+			curve.setCurveType(new BSplineCurveType(CurvesModel.BSPLINE));
+		} else if (string == CurvesModel.HERMITE) {
+			curve.setCurveType(new HermiteCurveType(CurvesModel.HERMITE));
+		}else {
 			System.out.println("Curve type [" + string + "] is unknown.");
 		}
 	}
 	
 	public void alignControlPoint() {
+	
+		Point current;
+		Point next;
+		Point previous;
+		Point r1;
+		Point r4;
+		Point newP;
+		
 		if (curve != null) {
 			Document doc = Application.getInstance().getActiveDocument();
 			List selectedObjects = doc.getSelectedObjects(); 
@@ -118,26 +133,59 @@ public class Curves extends AbstractTransformer implements DocObserver {
 				Shape s = (Shape)selectedObjects.get(0);
 				if (curve.getShapes().contains(s)){
 					int controlPointIndex = curve.getShapes().indexOf(s);
-					System.out.println("Try to apply G1 continuity on control point [" + controlPointIndex + "]");
+					if(controlPointIndex >= 3 && curve.getShapes().size() >= 7) {
+					
+						current = ((ControlPoint) curve.getShapes().get(controlPointIndex)).getCenter();
+						next = ((ControlPoint) curve.getShapes().get(controlPointIndex + 1)).getCenter();
+						previous = ((ControlPoint) curve.getShapes().get(controlPointIndex -1 )).getCenter();
+				
+					
+						r1 = new Point((int)(current.getX()-previous.getX()),(int)(current.getY()-previous.getY()));
+						r4 = new Point((int)(current.getX()-next.getX()),(int)(current.getY()-next.getY()));    					
+						double k = Math.sqrt(Math.pow(r4.getX(), 2) + Math.pow(r4.getY(), 2))/Math.sqrt(Math.pow(r1.getX(), 2) + Math.pow(r1.getY(), 2));
+						newP = new Point((int)(current.getX()+r1.getX()*k),(int)(current.getY()+r1.getY()*k));
+
+						next.setLocation(newP);
+						curve.update();
+						System.out.println("Try to apply C1 continuity on control point [" + controlPointIndex + "]");
+				
+					}
 				}
-			}
-			
+			}	
 		}
 	}
 	
 	public void symetricControlPoint() {
-		if (curve != null) {
-			Document doc = Application.getInstance().getActiveDocument();
-			List selectedObjects = doc.getSelectedObjects(); 
-			if (selectedObjects.size() > 0){
-				Shape s = (Shape)selectedObjects.get(0);
-				if (curve.getShapes().contains(s)){
-					int controlPointIndex = curve.getShapes().indexOf(s);
+		
+		Point current;
+		Point next;
+		Point previous;
+		Point r1;
+		Point r4;
+		Point newP;
+		
+		Document doc = Application.getInstance().getActiveDocument();
+		List selectedObjects = doc.getSelectedObjects(); 
+		if (selectedObjects.size() > 0){
+			Shape s = (Shape)selectedObjects.get(0);
+			if (curve.getShapes().contains(s)){
+				int controlPointIndex = curve.getShapes().indexOf(s);
+				if(controlPointIndex >= 3 && curve.getShapes().size() >= 7) {
+				
+					current = ((ControlPoint) curve.getShapes().get(controlPointIndex)).getCenter();
+					next = ((ControlPoint) curve.getShapes().get(controlPointIndex + 1)).getCenter();
+					previous = ((ControlPoint) curve.getShapes().get(controlPointIndex -1 )).getCenter();
+									
+			        Point distance = new Point((int)(current.getX()-previous.getX()),(int)(current.getY()-previous.getY()));
+			        newP = new Point((int)(current.getX()+distance.getX()),(int)(current.getY()+distance.getY()));
+			        System.out.println("Nouveau point :  "+newP);
+					next.setLocation(newP);
+					curve.update();
 					System.out.println("Try to apply C1 continuity on control point [" + controlPointIndex + "]");
+			
 				}
 			}
-			
-		}
+		}	
 	}
 
 	public void setNumberOfSections(int n) {
@@ -172,3 +220,4 @@ public class Curves extends AbstractTransformer implements DocObserver {
 	private Curve curve;
 	private CurvesPanel cp;
 }
+
