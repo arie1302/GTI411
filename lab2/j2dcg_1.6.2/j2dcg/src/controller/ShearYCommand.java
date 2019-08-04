@@ -154,7 +154,7 @@ public class ShearYCommand extends AnchoredTransformationCommand {
 			shape = (Shape)iter.next();
 			mt.addMememto(shape);
 			float shy = (float)Math.atan(angleDegrees);
-			System.out.println("angle degree: "+angleDegrees+"SHX: "+shy);
+			System.out.println("angle degree: "+angleDegrees+"SHY: "+shy);
 			AffineTransform t = shape.getAffineTransform();
 			t.shear(0,shy);
 			t.scale(sx, sy);
