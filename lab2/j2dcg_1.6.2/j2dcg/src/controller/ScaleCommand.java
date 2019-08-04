@@ -67,8 +67,6 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 				System.out.println("Top Left, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
-				anchorX = anchorSelected.x;
-				anchorY = anchorSelected.y;
 			}
 			break;
 			case 1:  //Top Center
@@ -76,8 +74,6 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 				System.out.println("Top Center, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
-				anchorX = -anchorSelected.x;
-				anchorY = -anchorSelected.y;
 			}
 			break;
 			case 2:  //Top Right
@@ -85,8 +81,6 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 				System.out.println("Top Right, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
-				anchorX = -anchorSelected.x;
-				anchorY = -anchorSelected.y;
 			}
 			break;
 			case 3:  //Middle Left
@@ -94,8 +88,6 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 				System.out.println("Middle Left, Get Anchor Point ... " );
 				anchorSelected = getAnchorPoint(selectedObjects);
 				System.out.println("Point X Y  "+anchorSelected.x +"  "+ anchorSelected.y);
-				anchorX = -anchorSelected.x;
-				anchorY = -anchorSelected.y;
 			}
 			break;
 			case 4:  //Center
@@ -131,9 +123,9 @@ public class ScaleCommand extends AnchoredTransformationCommand {
 			shape = (Shape)iter.next();
 			mt.addMememto(shape);
 			AffineTransform t = shape.getAffineTransform();
-			t.translate(anchorX,anchorY);
+			t.translate(-anchorX,-anchorY);
 			t.scale(sx, sy);
-			t.translate(anchorSelected.x,anchorSelected.y);
+			t.translate((1-sx)*anchorSelected.x,(1-sy)*anchorSelected.y);
 			shape.setAffineTransform(t);
 		}
 			
