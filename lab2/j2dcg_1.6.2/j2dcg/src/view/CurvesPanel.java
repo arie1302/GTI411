@@ -76,7 +76,7 @@ public class CurvesPanel extends JPanel implements DocObserver {
 		upperPanel.setLayout(new FlowLayout());
 		add(upperPanel);
 		
-		curvesLabel = new JLabel("Curve type:");
+		curvesLabel = new JLabel("Curve type :");
 		curvesComboBox = new JComboBox(CurvesModel.CTRL_POINTS_AND_CURVES_VALUES);
 		curvesComboBox.addActionListener(
 			new ActionListener(){
